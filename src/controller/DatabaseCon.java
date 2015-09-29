@@ -22,10 +22,10 @@ public class DatabaseCon {
 	private String user; //PC user?
 	private String password; //PC password?
 	
-	public DatabaseCon(String user, String password)
+	public DatabaseCon()
 	{
-		this.user = user;
-		this.password = password;
+		this.user = "root";
+		this.password = "p@ssword";
 	}
 	
 	public void open()

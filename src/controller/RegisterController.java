@@ -64,7 +64,8 @@ public class RegisterController extends HttpServlet {
 			
 			HttpSession session = request.getSession();
 			
-			if(request.getParameter("accesscontrollolplsdonthack") == null)
+			//following block of code is the validation if it was an admin registration and if the registered user is an admin
+			if(request.getParameter("accesscontrollolplsdonthack") == null) 
 				isAdmin = false;
 			else
 			{
@@ -78,7 +79,10 @@ public class RegisterController extends HttpServlet {
 				} else
 					isAdmin = false;
 			}
+			
+			
 			String aboutme = request.getParameter("aboutme");
+			System.out.println("------------------------"+aboutme);
 			if(gender.equals("Male"))
 			{
 				salutation = request.getParameter("salutationM");
@@ -95,7 +99,7 @@ public class RegisterController extends HttpServlet {
 			String[] salutationMArray = {"Mr", "Sir", "Senior", "Count"};
 			String[] salutationFArray = {"Miss", "Ms", "Mrs", "Madame", "Majesty", "Seniora"};
 			
-			
+			//birthday validation
 			LocalDate ld = LocalDate.now();
 			ld = ld.minusYears(18).minusDays(-1);
 			System.out.println("18 years before date: " + ld);
@@ -141,7 +145,7 @@ public class RegisterController extends HttpServlet {
 			}
 			
 			if(!isError){
-				DatabaseCon db = new DatabaseCon("root", "p@ssword");
+				DatabaseCon db = new DatabaseCon();
 			
 				Calendar cal = Calendar.getInstance();
 				cal.set(birthdate.getYear(), birthdate.getMonthValue() - 1, birthdate.getDayOfMonth());
@@ -188,6 +192,7 @@ public class RegisterController extends HttpServlet {
 		{
 			System.out.println("There's an error: "+e);
 			response.sendRedirect("Register.jsp");
+			//supposedly, this would print out the errors as an alert but it doesn't work
 			if(errorList.size() > 0)
 			{
 				response.setContentType("text/html");

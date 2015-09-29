@@ -35,7 +35,7 @@ public class PostController extends HttpServlet {
 		// TODO Auto-generated method stub
 		try
 		{
-			DatabaseCon db = new DatabaseCon("root", "p@ssword");
+			DatabaseCon db = new DatabaseCon();
 			int total = db.numPosts();
 			int page_num = 1;
 			if(request.getParameter("page_num") != null)
@@ -67,7 +67,7 @@ public class PostController extends HttpServlet {
 			String attachment = request.getParameter("attachment");
 			String message = validateMessage(request.getParameter("message"), attachment);
 			Account account = (Account)session.getAttribute("account");
-			DatabaseCon db = new DatabaseCon("root", "p@ssword");
+			DatabaseCon db = new DatabaseCon();
 			Post currPost = db.createPost(account.getUsername(), message, attachment);
 		}
 		catch(Exception e)

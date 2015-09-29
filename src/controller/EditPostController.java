@@ -1,5 +1,11 @@
 package controller;
 
+/*
+* This servlet handles the session where the user edits or deletes a post
+*/
+
+
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.Account;
 import model.Post;
 /**
- * Servlet implementation class EditPostController
+ * Servlet to handle edit/delete post requests
  */
 @WebServlet("/EditPostController")
 public class EditPostController extends HttpServlet {
@@ -37,7 +43,7 @@ public class EditPostController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		DatabaseCon dbConnection = new DatabaseCon("root", "p@ssword");
+		DatabaseCon dbConnection = new DatabaseCon();
 		boolean executed = false; //flag for if the changes were executed or not
 		try
 		{

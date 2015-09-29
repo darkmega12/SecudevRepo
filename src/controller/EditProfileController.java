@@ -46,7 +46,7 @@ public class EditProfileController extends HttpServlet {
 		}
 		else
 		{
-			DatabaseCon db = new DatabaseCon("root","p@ssword");
+			DatabaseCon db = new DatabaseCon();
 			Account viewAccount = db.getUser(username);
 			ArrayList<Post> userPosts = db.getUserPosts(username);
 			request.getSession().setAttribute("viewAccount", viewAccount);
@@ -105,7 +105,7 @@ public class EditProfileController extends HttpServlet {
 		{
 			if(!validationError(newFirstname, newLastname, newPassword, newGender, newSalutation, newBirthdate))
 			{
-				DatabaseCon db = new DatabaseCon("root", "p@ssword");
+				DatabaseCon db = new DatabaseCon();
 				Calendar cal = Calendar.getInstance();
 				cal.set(newBirthdate.getYear(), newBirthdate.getMonthValue() - 1, newBirthdate.getDayOfMonth());
 				Date bday = cal.getTime();

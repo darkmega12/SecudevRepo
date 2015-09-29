@@ -41,7 +41,7 @@ public class LoginController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		DatabaseCon db = new DatabaseCon("root", "p@ssword");
+		DatabaseCon db = new DatabaseCon();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		Account currAccount = db.authenticate(username, password);
