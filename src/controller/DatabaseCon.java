@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import model.Account;
 import model.Post;
@@ -16,6 +17,7 @@ import model.Post;
 
 public class DatabaseCon {
 	private ArrayList<Account> results = new ArrayList<Account>();
+	private ArrayList<Post> tempSearch = new ArrayList<Post>();
 	private Account tempAccount;
 	private Post tempPost;
 	private Connection dbConnection;
@@ -432,6 +434,137 @@ public class DatabaseCon {
 			while(rs.next())
 			{
 				postList.add(new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6)));
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+		return postList;
+	}
+	
+	/**
+	 * -------- SEARCH ---------
+	 */
+	
+	public ArrayList<Post> basicSearch(String value)
+	{
+		tempSearch = new ArrayList<Post>();
+		ArrayList<Post> searchedPosts = new ArrayList<Post>();
+		open();
+		try
+		{
+			String editValue= "%"+value+"%";
+			PreparedStatement basicSearch;
+			String query = "Select * from posts where message like ?";
+			basicSearch = dbConnection.prepareStatement(query);
+			basicSearch.setString(1, editValue);
+			ResultSet rs = basicSearch.executeQuery();
+			
+			while(rs.next())
+			{
+				searchedPosts.add(new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6)));
+			}
+		} catch(Exception e)
+		{
+			System.out.println(e);
+		} finally
+		{
+			close();
+		}
+		tempSearch = searchedPosts;
+		return searchedPosts;
+	}
+	
+	public ArrayList<Post> advancedSearch(String[] criteria, String[] value, String[] setOperator)
+	{
+		ArrayList<Post> searchedPosts = new ArrayList<Post>();
+		
+		open();
+		try 
+		{
+			PreparedStatement advancedSearch;
+			String query = "Select * from posts where ";
+			for(int i=0; i<criteria.length; i++)
+			{
+				if(i > 0)
+				{
+					if(setOperator[i].equals("AND"))
+					{
+						query += "and exists (Select * from posts where ";
+					}
+					else if(setOperator[i].equals("OR"))
+					{
+						query += " union ";
+					}
+					else
+					{
+						continue;
+					}
+				}
+				String queryCriteria = criteria[i];
+				if(query.equals("before date"))
+				{
+					queryCriteria = "datemodified <= ? ";
+				}
+				else if (query.equals("after date"))
+				{
+					queryCriteria = "datemodified >= ? ";
+				}
+				else if (query.equals("during date"))
+				{
+					queryCriteria = "datemodified = ? ";
+				}
+				else if(query.equals("message"))
+				{
+					queryCriteria = "message like \"%?%\"";
+				}
+				else
+				{
+					queryCriteria = criteria[i] + " = ? ";
+				}
+				query += queryCriteria;
+				
+				if(i>0 && setOperator[i].equals("AND"))
+				{
+					query += ")";
+				}
+			}
+			advancedSearch = dbConnection.prepareStatement(query);
+			for(int i=0; i<criteria.length; i++)
+			{
+				advancedSearch.setString(i+1, value[i]);
+			}
+			ResultSet rs = advancedSearch.executeQuery();
+			while(rs.next())
+			{
+				searchedPosts.add(new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6)));
+			}
+		} catch(Exception e)
+		{
+			
+		} finally
+		{
+			close();
+		}
+		tempSearch = searchedPosts;
+		return searchedPosts;
+	}
+	
+	public ArrayList<Post> getSearchedPosts(int page_num)
+	{
+		ArrayList<Post> postList = new ArrayList<Post>();
+		open();
+		try
+		{
+			int startValue = 10 * (page_num - 1); //start value for sql is 0
+			for(int i= (page_num-1) * 10 + 1; i<tempSearch.size(); i++)
+			{
+				postList.add(tempSearch.get(i));
 			}
 		}
 		catch(Exception e)

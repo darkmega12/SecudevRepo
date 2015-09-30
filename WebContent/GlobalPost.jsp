@@ -66,6 +66,63 @@ else
 <h2>Global Posts</h2>
 <h3><a href="HomePage.jsp">Home</a></h3>
 
+	<div id="search_pane">
+		<form action="SearchController" method="get">
+			<div id="basic_search">
+			Basic Search:
+				<input name="search"/>
+			</div>
+			Advance Search:
+			<div id="advance_search">
+				<div id="search_adv1">
+					<input name="search1" /> 
+					<select name="searchtype1">
+						<option value="username">name</option>
+						<option value="message">post</option>
+						<option value="before date">before date</option>
+						<option value="after date">after date</option>
+						<option value="during date">during date</option>
+					</select>
+					<select name="logicgate1">
+						<option value="N/A">N/A</option>
+						<option value="OR">OR</option>
+						<option value="AND">AND</option>
+					</select>
+				</div>
+				<div id="search_adv2">
+					<input name="search2" /> 
+					<select name="searchtype2">
+						<option value="username">name</option>
+						<option value="message">post</option>
+						<option value="before date">before date</option>
+						<option value="after date">after date</option>
+						<option value="during date">during date</option>
+					</select>
+					<select name="logicgate2">
+						<option value="N/A">N/A</option>
+						<option value="OR">OR</option>
+						<option value="AND">AND</option>
+					</select>
+				</div>
+				<div id="search_adv3">
+					<input name="search3" /> 
+					<select name="searchtype3">
+						<option value="username">name</option>
+						<option value="message">post</option>
+						<option value="before date">before date</option>
+						<option value="after date">after date</option>
+						<option value="during date">during date</option>
+					</select>
+				</div>
+			</div>
+			<div>
+				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
+				Advanced<input type="radio" name="searchType" value="advanced"/>
+				<input type="submit" value="Search"/>
+			</div>
+		</form>
+	</div>
+	<br/>
 <div id = "content">
 	<table class="demo">
 		<thead>
@@ -99,7 +156,7 @@ else
 				<%  java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
 					out.print(formatter.format(posts.get(i).getDateCreated()));
 				%> 
-				<% if(posts.get(i).getUsername().equals(tempAccount.getUsername()) || isAdmin) { %>
+				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
 					<form action = "EditPostController" method="post">
 						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
 						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
