@@ -37,7 +37,7 @@
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name = "password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <% //brute forced for testinggggg %>
-        <a class="btn btn-lg btn-primary btn-block" href="http://localhost:8088/TestSecuProj/Register.jsp" class="button">Register</a>
+        <a class="btn btn-lg btn-primary btn-block" href="http://localhost:8080/TestSecuProj/Register.jsp" class="button">Register</a>
       
       </form>
       <b>
