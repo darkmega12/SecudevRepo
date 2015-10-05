@@ -62,6 +62,7 @@ public class PostController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
+		boolean asd = true;
 		try
 		{
 			String attachment = request.getParameter("attachment");
@@ -72,6 +73,8 @@ public class PostController extends HttpServlet {
 		}
 		catch(Exception e)
 		{
+			asd = false;
+			System.out.println(e);
 			response.sendRedirect("CreatePost.jsp");
 		}
 		
@@ -80,7 +83,10 @@ public class PostController extends HttpServlet {
 			session.setAttribute("postnum", 1);
 		}
 		
-		doGet(request, response);
+		if(asd)
+		{
+			response.sendRedirect("HomePage.jsp");
+		}
 	}
 	
 	private String validateMessage(String message, String attachment)

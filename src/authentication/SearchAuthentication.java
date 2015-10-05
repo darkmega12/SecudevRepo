@@ -84,7 +84,7 @@ public class SearchAuthentication {
 			}
 			else if(query.equals("message"))
 			{
-				queryCriteria = "message like \"%?%\"";
+				queryCriteria = "message like %?%";
 			}
 			else
 			{

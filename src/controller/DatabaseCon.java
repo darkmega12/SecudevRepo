@@ -126,7 +126,6 @@ public class DatabaseCon {
 				registerAccount.setString(9, aboutme);
 				registerAccount.setDate(10, dateJoined);
 				registerAccount.executeUpdate();
-				close();
 			
 			tempAccount = new Account(username, password, firstname, lastname, gender, salutation, birthdate, isAdmin, aboutme, dateJoined);
 			}

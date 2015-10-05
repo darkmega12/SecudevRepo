@@ -63,14 +63,20 @@ public class SearchController extends HttpServlet {
 					}
 				}
 			}
+			else if (request.getParameter("searchType") != null && request.getAttribute("searchType").equals("advanced"))
+			{
+				//if(request.getPara)
+			}
 		}
 		catch(Exception e)
 		{
 			System.out.println(e);
 		}
+		
 		request.getSession().setAttribute("page_num", page_num);
 		request.getSession().setAttribute("posts", searchedPosts);
 		request.getSession().setAttribute("accounts", accounts);
+		
 		if(success)
 		{
 			response.sendRedirect("SearchPost.jsp");

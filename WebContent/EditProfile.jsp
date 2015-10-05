@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="model.Account,java.util.Date,java.text.SimpleDateFormat"%>
+    pageEncoding="ISO-8859-1" import="model.Account,java.util.Date,java.text.SimpleDateFormat,java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -77,6 +77,16 @@
 			return isValid;
 		}
 	</script>
+	<style>
+		#errors{
+			font-size: 20px;
+			color: red;
+		}
+		#success{
+			font-size: 20px;
+			color: green;
+		}
+	</style>
   </head>
 
   <body>
@@ -86,11 +96,26 @@
 
       <form action= "EditProfileController" class="form-signin" onsubmit="return validateRegistration()" method="post">
         <h2 class="form-signin-heading">Edit <%= curr.getUsername() %>'s Profile</h2>
-        
+       	<%ArrayList<String> errors = (ArrayList<String>)session.getAttribute("registerErrors"); %>
+		<% if(errors != null) { %>
+			<% if(errors.size() > 0) { %>
+				<p id="errors">
+				<% for(String error: errors) { %>
+					<%= error %> <br/>
+				<% } %>
+				</p>
+			<% session.setAttribute("registerErrors", null); //so that error message only shows once %>
+			<% } %>
+		<% } %>
+		<% String success = (String)session.getAttribute("success"); %>
+			<% if(success != null) { %>
+				<p id="success"> <%=success %> </p>
+				<% session.setAttribute("success", null); %>
+			<% } %>
 		<label for="firstname">First name</label>
         <input id="firstname" class="form-control" name ="firstname" autofocus maxlength="50" value = <%= curr.getfName() %>>
         <label for="lastname" >Last name</label>
-        <input id="lastname" class="form-control" name="lastname" maxlength="50" value = <%= curr.getfName() %>>
+        <input id="lastname" class="form-control" name="lastname" maxlength="50" value = <%= curr.getlName() %>>
 
 		<label>Gender</label>
 		<div class="form-group radio-group">
@@ -155,7 +180,7 @@
 		%>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
-        <a href="HomePage.jsp" class="btn btn-lg btn-primary btn-block" >Cancel</a>
+        <a href="HomePage.jsp" class="btn btn-lg btn-primary btn-block" >Back</a>
       </form>
 
     </div>
