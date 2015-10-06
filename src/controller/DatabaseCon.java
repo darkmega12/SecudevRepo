@@ -342,7 +342,7 @@ public class DatabaseCon {
 			}
 			else
 			{
-				query = "update posts set deleted = true where postid = ?";
+				query = "update posts set deleted = true where post_id = ?";
 			}
 			
 			modifyPost = dbConnection.prepareStatement(query);
