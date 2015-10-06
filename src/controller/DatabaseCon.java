@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import model.Account;
 import model.Post;
@@ -659,6 +665,71 @@ public class DatabaseCon {
 	    }
         
 		return false;
+	}
+	
+	public boolean startDownload( int id, HttpServletRequest request, HttpServletResponse response, ServletContext context ) 
+	{
+		open();
+		
+		try
+		{
+			//Get tuple with id value
+	        String sql = "SELECT * FROM backup WHERE csv_id = ?";
+	        PreparedStatement statement = dbConnection.prepareStatement(sql);
+	        statement.setInt(1, id);
+	        
+	        ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                // gets file name and file blob data
+                String fileName = result.getString("csv_id");
+                Blob blob = result.getBlob("csv_file");
+                InputStream inputStream = blob.getBinaryStream();
+                int fileLength = inputStream.available();
+                 
+                System.out.println("fileLength = " + fileLength);
+             
+                // sets MIME type for the file download
+                String mimeType = context.getMimeType(fileName);
+                if (mimeType == null) {        
+                    mimeType = "application/octet-stream";
+                }            
+                
+               // set content properties and header attributes for the response
+               response.setContentType(mimeType);
+               response.setContentLength(fileLength);
+               String headerKey = "Content-Disposition";
+               String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+               response.setHeader(headerKey, headerValue);
+
+               // writes the file to the client
+               OutputStream outStream = response.getOutputStream();
+                
+               byte[] buffer = new byte[4096];
+               int bytesRead = -1;
+                
+               while ((bytesRead = inputStream.read(buffer)) != -1) {
+                   outStream.write(buffer, 0, bytesRead);
+               }
+                
+               inputStream.close();
+               outStream.close();    
+
+           } else {
+               // no file found
+               response.getWriter().print("File not found for the id: " + id);  
+            
+   	           return false;
+           }
+	           return true;
+		} catch (SQLException ex) {
+		    ex.printStackTrace();
+		
+		    return false;
+		} catch (IOException ex) {
+	        ex.printStackTrace();
+		    return false;
+	    }
+		
 	}
 
 }
