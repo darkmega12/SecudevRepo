@@ -1,11 +1,16 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -576,4 +581,84 @@ public class DatabaseCon {
 		}
 		return postList;
 	}
+
+	/** EXPORT **/
+		/*EXPORTCSV*/
+	public boolean exportCSV()
+	{
+		open();
+		
+		// EXPORTING CSV
+        Statement statement;
+        String query;
+        
+        // Name CSV with date
+        Date dNow = new Date( );
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
+        
+        String filename = ft.format(dNow).toString();
+        
+        try 
+        {
+            statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            
+            //For comma separated file
+            //Note: please change directory, /tmp/ is for Mac
+            query = "SELECT username, datecreated, message " +
+            		"INTO OUTFILE '/tmp/" +
+            		filename +
+            		".csv' FIELDS TERMINATED BY ',' " +
+                    "FROM posts";
+            
+            statement.executeQuery(query);
+            
+            if (saveToSQL(filename) == true)
+            	return true;
+            else
+            	return false;
+        } 
+        	catch(Exception e) 
+        {
+            e.printStackTrace();
+            statement = null;
+            
+            return false;
+        }
+	}
+
+	public boolean saveToSQL(String filename)
+	{
+		open();
+		
+		// NOTE: Please change filepath accordingly
+		String filepath = "/tmp/"+filename+".csv";
+		 
+        try {
+            String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";
+            PreparedStatement statement = dbConnection.prepareStatement(sql);
+            InputStream inputStream = new FileInputStream(new File(filepath));
+ 
+            statement.setBlob(1, inputStream);
+            statement.setString(2, filename);
+            
+            int row = statement.executeUpdate();
+            
+            if (row > 0) 
+            {
+                System.out.println("A CSV file has been added to the table.");
+                return true;
+            }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+
+            return false;
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+
+            return false;
+	    }
+        
+		return false;
+	}
+
 }
