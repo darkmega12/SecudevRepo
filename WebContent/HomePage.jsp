@@ -31,8 +31,9 @@
 <a href='EditProfile.jsp'>Edit Profile! </a><br/>
 <a href='CreatePost.jsp'>Create Post!</a><br/>
 <a href='PostController'>View Posts</a><br>
+<% if(curr.isAdmin()) { %>
 <a href='Backup.jsp'>Create Backup</a>
-
+<% } %>
 <br>
 <h4> Username: <%= curr.getUsername() %></h4><br/>
 <h4> Birthdate: <%
