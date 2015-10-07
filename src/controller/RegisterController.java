@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import authentication.AccountAuthentication;
 import model.Account;
 
 /**
@@ -41,6 +42,7 @@ public class RegisterController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.getSession().setAttribute("registerErrors", null);
 		response.sendRedirect("Register.jsp");
 	}
 
@@ -50,6 +52,11 @@ public class RegisterController extends HttpServlet {
 	private ArrayList<String> errorList = new ArrayList<String>();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		ArrayList<String> errors = new ArrayList<String>();			
+		AccountAuthentication accValidate = new AccountAuthentication();
+		HttpSession session = request.getSession();
+		
+		session.setAttribute("registerErrors", null);
 		try
 		{
 			String date[] = request.getParameter("birthdate").split("/");
@@ -58,11 +65,17 @@ public class RegisterController extends HttpServlet {
 			String firstname = request.getParameter("firstname");
 			String lastname = request.getParameter("lastname");
 			String gender = request.getParameter("sex");
-			String salutation;
-			LocalDate birthdate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]));
+			String salutation = "";
+			LocalDate birthdate = null;
+			try
+			{
+				birthdate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]));
+			}
+			catch(Exception e)
+			{
+				errors.add("Invalid Date");
+			}
 			boolean isAdmin;
-			
-			HttpSession session = request.getSession();
 			
 			//following block of code is the validation if it was an admin registration and if the registered user is an admin
 			if(request.getParameter("accesscontrollolplsdonthack") == null) 
@@ -79,79 +92,46 @@ public class RegisterController extends HttpServlet {
 				} else
 					isAdmin = false;
 			}
-			
-			
-			String aboutme = request.getParameter("aboutme");
-			System.out.println("------------------------"+aboutme);
+			String aboutme = accValidate.sanitize(request.getParameter("aboutme"));
 			if(gender.equals("Male"))
 			{
 				salutation = request.getParameter("salutationM");
 			}
-			else
+			else if(gender.equals("Female"))
 			{
 				salutation = request.getParameter("salutationF");
 			}
-			
-			//regex used to validate the name and username
-			Pattern namePattern = Pattern.compile("^[a-zA-Z ]{1,50}$");
-			Pattern usernamePattern = Pattern.compile("^[a-zA-Z0-9_]{1,50}$");
-			String[] genderArray = {"Male", "Female"};
-			String[] salutationMArray = {"Mr", "Sir", "Senior", "Count"};
-			String[] salutationFArray = {"Miss", "Ms", "Mrs", "Madame", "Majesty", "Seniora"};
-			
-			//birthday validation
-			LocalDate ld = LocalDate.now();
-			ld = ld.minusYears(18).minusDays(-1);
-			System.out.println("18 years before date: " + ld);
-			
-			boolean isError = false;
-			
-			errorList = new ArrayList<String>();
-			
-			//validates the user input; makes isError true when one falls into the error criteria
-			if (!usernamePattern.matcher(username).matches())
+
+			if(errors.size() == 0)
 			{
-				System.out.println("Username error: "+ username);
-				errorList.add("Invalid Username");
-				isError = true;
-			} else if (!namePattern.matcher(firstname).matches()){
-				errorList.add("Invalid Firstname");
-				System.out.println("First name error");
-				isError = true;
-			} else if (!namePattern.matcher(lastname).matches()){
-				errorList.add("Invalid Lastname");
-				System.out.println("Last name error");
-				isError = true;
-			} else if(!Arrays.asList(genderArray).contains(gender)){
-				errorList.add("Gender Error");
-				System.out.println("gender error");
-				isError = true;
-			} else if (gender.equals("Male") && !Arrays.asList(salutationMArray).contains(salutation)){
-				errorList.add("Invalid Male Salutation");
-				System.out.println("male salutation error");
-				isError = true;
-			} else if (gender.equals("Female") && !Arrays.asList(salutationFArray).contains(salutation)){
-				errorList.add("Invalid Female Salutation");
-				System.out.println("female salutation error");
-				isError = true;
-			} else if (!birthdate.isBefore(ld)){
-				errorList.add("You're too young for this.");
-				System.out.println("birthday");
-				isError = true;
-			} else if(password.length()==0 || password.length()>24){
-				errorList.add("Invalid Password");
-				System.out.println("passwordlength");
-				isError = true;
+				if(!accValidate.validateName(firstname) || !accValidate.validateName(lastname))
+				{
+					errors.add("Invalid name");
+				}
+				if(!accValidate.validateUsername(username))
+				{
+					errors.add("Invalid username");
+				}
+				if(!accValidate.validatePassword(password))
+				{
+					errors.add("Invalid password");
+				}
+				if(!accValidate.validateGender(gender, salutation))
+				{
+					errors.add("Invalid gender and/or salutation");
+				}
+				if(!accValidate.validateDate(birthdate))
+				{
+					errors.add("Invalid birthday");
+				}
 			}
-			
-			if(!isError){
+			if(errors.size() == 0)
+			{
 				DatabaseCon db = new DatabaseCon();
 			
 				Calendar cal = Calendar.getInstance();
 				cal.set(birthdate.getYear(), birthdate.getMonthValue() - 1, birthdate.getDayOfMonth());
 				Date bday = cal.getTime();
-				
-				System.out.println(bday);
 				Account currAccount = db.register(username, password, firstname, lastname, gender, salutation, bday, isAdmin, aboutme);
 			
 				if(currAccount != null)
@@ -159,50 +139,27 @@ public class RegisterController extends HttpServlet {
 					response.sendRedirect("index.jsp");
 				}  else
 				{
+					errors.add("Account not created. Possible duplicate user");
 					response.sendRedirect("Register.jsp");
-					if(errorList.size() > 0)
-					{
-						response.setContentType("text/html");
-					    PrintWriter out = response.getWriter();
-					    
-					    out.println("<script> alert(\"ERROR ENCOUNTERED \\n\"");
-					    for(String error:errorList)
-					    	out.println(error+"\\n");
-					    out.println("</script>");
-					}
+					session.setAttribute("registerErrors", errors);
 				}
 			
 			
 			} else {
 				System.out.println("There's error");
+				for(String error:errors)
+					System.out.println(error);
 				response.sendRedirect("Register.jsp");
-				if(errorList.size() > 0)
-				{
-					response.setContentType("text/html");
-				    PrintWriter out = response.getWriter();
-				    
-				    out.println("<script> alert(\"ERROR ENCOUNTERED \\n\"");
-				    for(String error:errorList)
-				    	out.println(error+"\\n");
-				    out.println("</script>");
-				}
+				session.setAttribute("registerErrors", errors);
+				
 			}
 		}
 		catch(Exception e)
 		{
 			System.out.println("There's an error: "+e);
 			response.sendRedirect("Register.jsp");
-			//supposedly, this would print out the errors as an alert but it doesn't work
-			if(errorList.size() > 0)
-			{
-				response.setContentType("text/html");
-			    PrintWriter out = response.getWriter();
-			    
-			    out.println("<script> alert(\"ERROR ENCOUNTERED \\n\"");
-			    for(String error:errorList)
-			    	out.println(error+"\\n");
-			    out.println("</script>");
-			}
+			session.setAttribute("registerErrors", errors);
+
 		}
 	}
 }

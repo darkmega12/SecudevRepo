@@ -116,6 +116,7 @@ else
 				</div>
 			</div>
 			<div>
+				<b>Date Format: YYYY-MM-DD</b><br>
 				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
 				Advanced<input type="radio" name="searchType" value="advanced"/>
 				<input type="submit" value="Search"/>
@@ -165,7 +166,9 @@ else
 					</form>
 				<% } %>
 				<br>
-				<%= posts.get(i).getMessage() %> <br>
+				<%= posts.get(i).getMessage() %> <br><br>
+				
+				<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
 				<% out.print(formatter.format(posts.get(i).getDateModified())); %>
 				</div>
 			</td>

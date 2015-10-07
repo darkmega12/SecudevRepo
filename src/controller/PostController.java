@@ -1,22 +1,27 @@
 package controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
+import authentication.PostAuthentication;
 import model.Account;
 import model.Post;
 /**
  * Servlet implementation class PostController
  */
 @WebServlet("/PostController")
+@MultipartConfig(maxFileSize = 16177215)
 public class PostController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -47,7 +52,6 @@ public class PostController extends HttpServlet {
 			request.getSession().setAttribute("posts", posts);
 			request.getSession().setAttribute("accounts", accounts);
 			request.getSession().setAttribute("total", total);
-			System.out.println(total+"-------------------------------------------------");
 		}
 		catch(Exception e)
 		{
@@ -62,38 +66,56 @@ public class PostController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
+		boolean noErrors = true;
+		PostAuthentication validate = new PostAuthentication();
 		try
 		{
-			String attachment = request.getParameter("attachment");
-			String message = validateMessage(request.getParameter("message"), attachment);
-			Account account = (Account)session.getAttribute("account");
-			DatabaseCon db = new DatabaseCon();
-			Post currPost = db.createPost(account.getUsername(), message, attachment);
+			String message = "";
+			//String imagepath = "";
+			if(request.getParameter("message") != null)
+			{
+				message = request.getParameter("message");
+			}
+			if(message.equals(""))
+			{
+				session.setAttribute("errors", "No message input.");
+				noErrors = false;
+			}
+			else
+			{
+				message = validate.sanitizePost(request.getParameter("message"));
+				  InputStream inputStream = null; // input stream of the upload file
+			         
+			        // obtains the upload file part in this multipart request
+			        Part filePart = request.getPart("attachment");
+			        if (filePart != null) {
+			            // prints out some information for debugging
+			            System.out.println(filePart.getName());
+			            System.out.println(filePart.getSize());
+			            System.out.println(filePart.getContentType());
+			             
+			            // obtains input stream of the upload file
+			            inputStream = filePart.getInputStream();
+			        }
+
+				//imagepath = (String)request.getParameter("attachment");
+				Account account = (Account)session.getAttribute("account");
+				DatabaseCon db = new DatabaseCon();
+				System.out.println("Attachment = "+filePart.getContentType());
+				Post currPost = db.createPost(account.getUsername(), message, inputStream,filePart.getContentType());
+			}
 		}
 		catch(Exception e)
 		{
-			response.sendRedirect("CreatePost.jsp");
-		}
-		
+			noErrors = false;
+			System.out.println(e);
+			session.setAttribute("errors", e.toString());
+			
+		}	
 		if(session.getAttribute("postnum") == null)
 		{
 			session.setAttribute("postnum", 1);
 		}
-		
-		doGet(request, response);
-	}
-	
-	private String validateMessage(String message, String attachment)
-	{
-		String temp = message;
-		temp = temp.replace("<script>", "");
-		temp = temp.replace("</script>", "");
-		
-		if(!attachment.equals(""))
-		{
-			String tempAttach = "<img src="+attachment+"height=\"200\" width=\"200\">";
-			temp = temp + tempAttach;
-		}	
-		return temp;
+		response.sendRedirect("CreatePost.jsp");
 	}
 }

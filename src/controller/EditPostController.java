@@ -57,6 +57,7 @@ public class EditPostController extends HttpServlet {
 				{
 					if(action.equals("delete"))
 					{
+						System.out.println("I deleted!");
 						dbConnection.modifyPost(post_id, "", "", false);
 						executed = true;
 					}
@@ -74,6 +75,8 @@ public class EditPostController extends HttpServlet {
 		{
 			response.sendRedirect("GlobalPost.jsp");
 		}
+		else
+			response.sendRedirect("GlobalPost.jsp");
 	}
 
 }

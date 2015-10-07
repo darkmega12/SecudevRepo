@@ -23,13 +23,24 @@
 	
 	<h2> <%= curr.getUsername() %> Post </h2>
 	
-	<a href="HomePage.jsp">Home</a>
+	<a href="HomePage.jsp">Home</a> <br/> <br>
+	<a href="PostController">View Posts</a>
 	
+	<% if(session.getAttribute("errors") != null) {%>
+		<p id=error> <%= (String)session.getAttribute("errors") %> </p>
+		<% session.setAttribute("errors", null); %>
+	<% } %>
+	
+	<% if(session.getAttribute("success") != null) {%>
+		<p id=success> <%= (String)session.getAttribute("success") %> </p>
+		<% session.setAttribute("success", null); %>
+	<% } %>
 	<p> Legend: <br>
-		Bold: Enclose string in &lt;b&gt; and &lt;/b&gt; <br>
-		Italic: Enclose string in &lt;i&gt; and &lt;/i&gt; <br>
+		Bold: Enclose string in [b] and [/b] <br>
+		Italic: Enclose string in [i] and [/i] <br>
 	</p>
-	<form action="PostController" method="post">
+	<form action="PostController" method="post" enctype="multipart/form-data">
+	
 		<table>
 			<tr><td>POST: <textarea name="message" rows="8"></textarea></td></tr>
 			<tr><td>Attachment: <input type="file" name="attachment"/></td></tr>

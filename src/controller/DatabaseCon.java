@@ -1,11 +1,16 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -126,7 +131,6 @@ public class DatabaseCon {
 				registerAccount.setString(9, aboutme);
 				registerAccount.setDate(10, dateJoined);
 				registerAccount.executeUpdate();
-				close();
 			
 			tempAccount = new Account(username, password, firstname, lastname, gender, salutation, birthdate, isAdmin, aboutme, dateJoined);
 			}
@@ -296,7 +300,7 @@ public class DatabaseCon {
 		return tempPost;
 	}
 	
-	public Post createPost(String username, String message, String attachment)
+	public Post createPost(String username, String message, InputStream attachment, String imagename)
 	{
 		tempPost = null;
 		try{
@@ -304,16 +308,21 @@ public class DatabaseCon {
 			String url = "jdbc:mysql://localhost:3306/secudevs18";
 			
 			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			String postQuery = "insert into posts (username, message, attachment, datecreated, datemodified) values (?,?,?,?,?)";
+			String postQuery = "insert into posts (username, message, attachment, datecreated, datemodified, imagename) values (?,?,?,?,?,?)";
 			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
 			
 			java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 			
 			createPost.setString(1, username);
 			createPost.setString(2, message);
-			createPost.setString(3, attachment);
+	        if (attachment != null) {
+                // fetches input stream of the upload file for the blob column
+                createPost.setBlob(3, attachment);
+                System.out.println("Printed Blob Success!");
+            }
 			createPost.setDate(4, dateToday);
 			createPost.setDate(5, dateToday);
+			createPost.setString(6, imagename);
 			createPost.executeUpdate();
 			
 			dbConnection.close();
@@ -338,7 +347,7 @@ public class DatabaseCon {
 			}
 			else
 			{
-				query = "update posts set deleted = true where postid = ?";
+				query = "update posts set deleted = true where post_id = ?";
 			}
 			
 			modifyPost = dbConnection.prepareStatement(query);
@@ -483,7 +492,7 @@ public class DatabaseCon {
 	public ArrayList<Post> advancedSearch(String[] criteria, String[] value, String[] setOperator)
 	{
 		ArrayList<Post> searchedPosts = new ArrayList<Post>();
-		
+		System.out.println("I go in");
 		open();
 		try 
 		{
@@ -491,53 +500,56 @@ public class DatabaseCon {
 			String query = "Select * from posts where ";
 			for(int i=0; i<criteria.length; i++)
 			{
+				System.out.println("I go in num "+i);
 				if(i > 0)
 				{
-					if(setOperator[i].equals("AND"))
+					if(setOperator[i-1].equals("AND"))
 					{
-						query += "and exists (Select * from posts where ";
+						query += " and ";
 					}
-					else if(setOperator[i].equals("OR"))
+					else if(setOperator[i-1].equals("OR"))
 					{
-						query += " union ";
+						query += " or ";
 					}
 					else
 					{
-						continue;
+						break;
 					}
 				}
 				String queryCriteria = criteria[i];
-				if(query.equals("before date"))
+				if(queryCriteria.equals("before date"))
 				{
-					queryCriteria = "datemodified <= ? ";
+					query += "datemodified <= ? ";
 				}
-				else if (query.equals("after date"))
+				else if (queryCriteria.equals("after date"))
 				{
-					queryCriteria = "datemodified >= ? ";
+					query += "datemodified >= ? ";
 				}
-				else if (query.equals("during date"))
+				else if (queryCriteria.equals("during date"))
 				{
-					queryCriteria = "datemodified = ? ";
+					query += "datemodified = ? ";
 				}
-				else if(query.equals("message"))
+				else if(queryCriteria.equals("message"))
 				{
-					queryCriteria = "message like \"%?%\"";
+					query += "message like ?";
 				}
-				else
+				else if(queryCriteria.equals("username"))
 				{
-					queryCriteria = criteria[i] + " = ? ";
+					query += "username = ?";
 				}
-				query += queryCriteria;
-				
-				if(i>0 && setOperator[i].equals("AND"))
-				{
-					query += ")";
-				}
+		
+			
 			}
+			query += ";";
+			System.out.println(query);
+			
 			advancedSearch = dbConnection.prepareStatement(query);
-			for(int i=0; i<criteria.length; i++)
+			for(int i=0; i<value.length; i++)
 			{
+				if(value[i] != "" && !criteria[i].equals("message"))
 				advancedSearch.setString(i+1, value[i]);
+				else if(value[i] != "" && criteria[i].equals("message"))
+				advancedSearch.setString(i+1, "%"+value[i]+"%");
 			}
 			ResultSet rs = advancedSearch.executeQuery();
 			while(rs.next())
@@ -577,4 +589,84 @@ public class DatabaseCon {
 		}
 		return postList;
 	}
+
+	/** EXPORT **/
+		/*EXPORTCSV*/
+	public boolean exportCSV()
+	{
+		open();
+		
+		// EXPORTING CSV
+        Statement statement;
+        String query;
+        
+        // Name CSV with date
+        Date dNow = new Date( );
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
+        
+        String filename = ft.format(dNow).toString();
+        
+        try 
+        {
+            statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            
+            //For comma separated file
+            //Note: please change directory, /tmp/ is for Mac
+            query = "SELECT username, datecreated, message " +
+            		"INTO OUTFILE '/tmp/" +
+            		filename +
+            		".csv' FIELDS TERMINATED BY ',' " +
+                    "FROM posts";
+            
+            statement.executeQuery(query);
+            
+            if (saveToSQL(filename) == true)
+            	return true;
+            else
+            	return false;
+        } 
+        	catch(Exception e) 
+        {
+            e.printStackTrace();
+            statement = null;
+            
+            return false;
+        }
+	}
+
+	public boolean saveToSQL(String filename)
+	{
+		open();
+		
+		// NOTE: Please change filepath accordingly
+		String filepath = "/tmp/"+filename+".csv";
+		 
+        try {
+            String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";
+            PreparedStatement statement = dbConnection.prepareStatement(sql);
+            InputStream inputStream = new FileInputStream(new File(filepath));
+ 
+            statement.setBlob(1, inputStream);
+            statement.setString(2, filename);
+            
+            int row = statement.executeUpdate();
+            
+            if (row > 0) 
+            {
+                System.out.println("A CSV file has been added to the table.");
+                return true;
+            }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+
+            return false;
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+
+            return false;
+	    }
+        
+		return false;
+	}
+
 }
