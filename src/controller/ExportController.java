@@ -41,7 +41,7 @@ public class ExportController extends HttpServlet {
 		
 		if (dbConnection.exportCSV() == true) {
 			System.out.println("Backup Successful");
-			response.sendRedirect("BackupSucess.jsp");
+			response.sendRedirect("BackupSuccess.jsp");
 		} else { 
 			System.out.println("Backup Unsuccessful");
 			response.sendRedirect("BackupFailed.jsp");

@@ -678,11 +678,14 @@ public class DatabaseCon {
 	        PreparedStatement statement = dbConnection.prepareStatement(sql);
 	        statement.setInt(1, id);
 	        
+	        System.out.println("id = " + id);
+	        
 	        ResultSet result = statement.executeQuery();
             if (result.next()) {
                 // gets file name and file blob data
                 String fileName = result.getString("csv_id");
                 Blob blob = result.getBlob("csv_file");
+                System.out.println("id = " + result.getString("csv_id"));
                 InputStream inputStream = blob.getBinaryStream();
                 int fileLength = inputStream.available();
                  
