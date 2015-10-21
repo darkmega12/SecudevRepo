@@ -598,6 +598,12 @@ public class DatabaseCon {
         Statement statement;
         String query;
         
+        // CHANGE DIRECTORY
+        String mac = "/tmp/";
+        String windows = "C:/";
+        // Else: C:\Program Files\MySQL\MySQL Server 5.0.
+        // Else: C:\mysql
+        
         // Name CSV with date
         Date dNow = new Date( );
         SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
@@ -611,7 +617,7 @@ public class DatabaseCon {
             //For comma separated file
             //Note: please change directory, /tmp/ is for Mac
             query = "SELECT username, datecreated, message " +
-            		"INTO OUTFILE '/tmp/" +
+            		"INTO OUTFILE '" + mac +
             		filename +
             		".csv' FIELDS TERMINATED BY ',' " +
                     "FROM posts";
@@ -635,9 +641,13 @@ public class DatabaseCon {
 	public boolean saveToSQL(String filename)
 	{
 		open();
-		
+
+        // CHANGE DIRECTORY
+        String mac = "/tmp/";
+        String windows = "C:/";
+        
 		// NOTE: Please change filepath accordingly
-		String filepath = "/tmp/"+filename+".csv";
+		String filepath = mac+filename+".csv";
 		 
         try {
             String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";
