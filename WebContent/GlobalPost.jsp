@@ -48,7 +48,7 @@
      color: #0066ff;
      text-decoration: underline;
      cursor: pointer; 
-}
+	}
 </style>
 </head>
 <body>
@@ -157,11 +157,17 @@ else
 					out.print(formatter.format(posts.get(i).getDateCreated()));
 				%> 
 				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
-					<form action = "EditPostController" method="post">
-						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
-						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
-						<input type="submit" class="sub" name="edit" value="edit"/>
-						<input type="submit" class="sub" name="edit" value="delete">
+					<form clas="left" action = "EditPostController" method="post">
+						<input type="hidden" name ="index" value = <%= i %>>
+						<input type="hidden" name="post_id" value = <%= posts.get(i).getPostid()%>>
+						<input type="hidden" name="username" value = <%= posts.get(i).getUsername()%>>
+						<input type="submit" class="sub" value="edit"/>
+					</form>
+					<form class="right" action = "DeletePostController" method="post">
+						<input type="hidden" name ="index" value = <%= i %>>
+						<input type="hidden" name="post_id" value = <%= posts.get(i).getPostid()%>>
+						<input type="hidden" name="username" value = <%= posts.get(i).getUsername()%>>
+						<input type="submit" class="sub" value="delete">
 					</form>
 				<% } %>
 				<br>
