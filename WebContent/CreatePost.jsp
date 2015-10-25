@@ -39,7 +39,8 @@
 		Bold: Enclose string in [b] and [/b] <br>
 		Italic: Enclose string in [i] and [/i] <br>
 	</p>
-	<form action="PostController" method="post">
+	<form action="PostController" method="post" enctype="multipart/form-data">
+	
 		<table>
 			<tr><td>POST: <textarea name="message" rows="8"></textarea></td></tr>
 			<tr><td>Attachment: <input type="file" name="attachment"/></td></tr>

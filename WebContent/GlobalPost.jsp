@@ -48,7 +48,7 @@
      color: #0066ff;
      text-decoration: underline;
      cursor: pointer; 
-	}
+}
 </style>
 </head>
 <body>
@@ -116,6 +116,7 @@ else
 				</div>
 			</div>
 			<div>
+				<b>Date Format: YYYY-MM-DD</b><br>
 				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
 				Advanced<input type="radio" name="searchType" value="advanced"/>
 				<input type="submit" value="Search"/>
@@ -157,21 +158,17 @@ else
 					out.print(formatter.format(posts.get(i).getDateCreated()));
 				%> 
 				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
-					<form clas="left" action = "EditPostController" method="post">
-						<input type="hidden" name ="index" value = <%= i %>>
-						<input type="hidden" name="post_id" value = <%= posts.get(i).getPostid()%>>
-						<input type="hidden" name="username" value = <%= posts.get(i).getUsername()%>>
-						<input type="submit" class="sub" value="edit"/>
-					</form>
-					<form class="right" action = "DeletePostController" method="post">
-						<input type="hidden" name ="index" value = <%= i %>>
-						<input type="hidden" name="post_id" value = <%= posts.get(i).getPostid()%>>
-						<input type="hidden" name="username" value = <%= posts.get(i).getUsername()%>>
-						<input type="submit" class="sub" value="delete">
+					<form action = "EditPostController" method="post">
+						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
+						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
+						<input type="submit" class="sub" name="edit" value="edit"/>
+						<input type="submit" class="sub" name="edit" value="delete">
 					</form>
 				<% } %>
 				<br>
-				<%= posts.get(i).getMessage() %> <br>
+				<%= posts.get(i).getMessage() %> <br><br>
+				
+				<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
 				<% out.print(formatter.format(posts.get(i).getDateModified())); %>
 				</div>
 			</td>

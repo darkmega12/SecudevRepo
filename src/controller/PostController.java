@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import authentication.PostAuthentication;
 import model.Account;
@@ -77,11 +79,27 @@ public class PostController extends HttpServlet {
 				noErrors = false;
 			}
 			else
-			{
+			{				
 				message = validate.sanitizePost(request.getParameter("message"));
+				InputStream inputStream = null; // input stream of the upload file
+			         
+			        // obtains the upload file part in this multipart request
+			    Part filePart = request.getPart("attachment");
+			    if (filePart != null) {
+			            // prints out some information for debugging
+			            System.out.println(filePart.getName());
+			            System.out.println(filePart.getSize());
+			            System.out.println(filePart.getContentType());
+			             
+			            // obtains input stream of the upload file
+			            inputStream = filePart.getInputStream();
+			        }
+	
+				//imagepath = (String)request.getParameter("attachment");
 				Account account = (Account)session.getAttribute("account");
 				DatabaseCon db = new DatabaseCon();
-				Post currPost = db.createPost(account.getUsername(), message, "");
+				System.out.println("Attachment = "+filePart.getContentType());
+				Post currPost = db.createPost(account.getUsername(), message, inputStream,filePart.getContentType());
 			}
 		}
 		catch(Exception e)

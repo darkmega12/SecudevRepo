@@ -46,15 +46,17 @@ public class SearchController extends HttpServlet {
 				request.getSession().setAttribute("page_num", 1);
 			}
 			DatabaseCon db = new DatabaseCon();
+			accounts = db.getUsers();
 			if(request.getParameter("searchType") != null && request.getParameter("searchType").equals("basic"))
 			{
 				String value;
+				System.out.println("I go in basic");
 				if(request.getParameter("search") != null)
 				{
 					value = request.getParameter("search");
 					value = authenticate.sanitize(value);
 					
-					accounts = db.getUsers();
+					
 					
 					searchedPosts = db.basicSearch(value);
 					if(searchedPosts.size() > 10)
@@ -63,9 +65,41 @@ public class SearchController extends HttpServlet {
 					}
 				}
 			}
-			else if (request.getParameter("searchType") != null && request.getAttribute("searchType").equals("advanced"))
+			else if (request.getParameter("searchType") != null && request.getParameter("searchType").equals("advanced"))
 			{
-				//if(request.getPara)
+				System.out.println("I go in req");
+				
+				String[] criteria = new String[3];
+				String[] value = new String[3];
+				String[] ops = new String[2];
+			
+				for(int i = 0; i < 3; i++)
+				{
+					
+						criteria[i] = request.getParameter("searchtype"+(i+1));
+					criteria[i] = authenticate.sanitize(criteria[i]);
+					System.out.println("I go in typ "+i);
+				}
+				for(int i = 0; i < 3; i++)
+				{
+					if(request.getParameter("search"+(i+1)) != null)
+					{
+					value[i] = request.getParameter("search"+(i+1));
+					value[i] = authenticate.sanitize(value[i]);
+					}
+					System.out.println("I go in val "+i);
+				}
+				for(int i = 0; i < 2; i++)
+				{
+					ops[i] = request.getParameter("logicgate"+(i+1));
+					ops[i] = authenticate.sanitize(ops[i]);
+					System.out.println("I go in ops "+i);
+				}
+				searchedPosts = db.advancedSearch(criteria, value, ops);
+				if(searchedPosts.size() > 10)
+				{
+					searchedPosts = db.getSearchedPosts(1);
+				}
 			}
 		}
 		catch(Exception e)

@@ -47,17 +47,24 @@ public class EditPostController extends HttpServlet {
 		boolean executed = false; //flag for if the changes were executed or not
 		try
 		{
-			boolean check = false;
+			String action = request.getParameter("edit");
 			int post_id = Integer.parseInt(request.getParameter("post_id"));
 			String username = request.getParameter("username");
 			Account currAccount = (Account)request.getSession().getAttribute("account");
-			if(currAccount.isAdmin() || currAccount.getUsername().equals(request.getParameter("username")))
+			if(currAccount.isAdmin() || currAccount.getUsername().equals(request.getAttribute("username")))
 			{
-				username = currAccount.getUsername();
 				if(dbConnection.authenticatePost(post_id, username)) //checks if the right username is with the right post
 				{
-					response.sendRedirect("EditPost.jsp");
-					check = true;
+					if(action.equals("delete"))
+					{
+						System.out.println("I deleted!");
+						dbConnection.modifyPost(post_id, "", "", false);
+						executed = true;
+					}
+					else if(action.equals("update"))
+					{
+						executed = true;
+					}
 				}
 			}
 		} catch(Exception e)
