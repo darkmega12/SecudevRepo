@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Edit Profile</title>
+    <title>Edit</title>
 	<!--Stylesheets-->
 	<link rel="stylesheet" href="css/jquery-ui.css">
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">

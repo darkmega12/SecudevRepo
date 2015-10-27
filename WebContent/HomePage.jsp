@@ -4,12 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Home</title>
 </head>
 <style>
 	body{
-		background-color: rgb(149, 165, 166);
+		background-color: white;
 	}
+	
+	#rcorners2 {
+    border-radius: 25px;
+    border: 2px solid #8AC007;
+    padding: 20px; 
+    width: 350px;
+    height: 450px; 
+}
 </style>
 <body>
 
@@ -24,36 +32,38 @@
 		session.setAttribute("isAdmin", curr.isAdmin());
 	
 %>
-<h2> Welcome, <%= curr.getSalutation() %> <%= curr.getfName()%> <%= curr.getlName() %> </h2><br/>
-<form action = "LogoutController" method = "post">
-<input type = "submit" value = "Logout" />
-</form><br/>
-<a href='EditProfile.jsp'>Edit Profile! </a><br/>
-<a href='CreatePost.jsp'>Create Post!</a><br/>
-<a href='PostController'>View Posts</a><br>
-<% if(curr.isAdmin()) { %>
-<a href='Backup.jsp'>Create Backup</a>
-<% } %>
-<br>
-<h4> Username: <%= curr.getUsername() %></h4><br/>
-<h4> Birthdate: <%
-		java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
-		out.print(formatter.format(curr.getBirthday()));
-		%></h4><br/>
-<h4> Gender: <%=curr.getGender() %></h4>
-<h4> Date Joined: <%= curr.getDateJoined() %> </h4>
-<h4> About Me: <%= curr.getAboutme() %> </h4><br/>
 
-
-
-
-<% if(curr.isAdmin()) 
-	{
-		out.println("You're an admin!");
-		session.setAttribute("isAdmin", true);
-		out.println("<a class='btn btn-lg btn-primary ' href='Register.jsp' class='button'>Register</a>");
-	}
-  }
-%>
+<div id=rcorners2>
+	<h4> Welcome, <%= curr.getSalutation() %> <%= curr.getfName()%> <%= curr.getlName() %> </h4>
+	<hr><br>
+	<p> Username: <%= curr.getUsername() %></p>
+	<p> Birthdate: <%
+			java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
+			out.print(formatter.format(curr.getBirthday()));
+			%></p]>
+	<p> Gender: <%=curr.getGender() %></p>
+	<p> Date Joined: <%= curr.getDateJoined() %> </p>
+	<p> About Me: <%= curr.getAboutme() %> </p>
+	
+	<a href='EditProfile.jsp'>Edit Profile </a><br/>
+	<a href='CreatePost.jsp'>Post Message</a><br/></br>
+	<a href='Store.jsp'>The Store</a><br>
+	<a href='PostController'>View Forum</a><br>
+	<% if(curr.isAdmin()) { %>
+	<a href='Backup.jsp'>Create Backup</a></br>
+	<% } %>
+	<% if(curr.isAdmin()) 
+		{
+			session.setAttribute("isAdmin", true);
+			out.println("<a class='btn btn-lg btn-primary ' href='Register.jsp' class='button'>Register</a>");
+			out.println("a new user!");
+		}
+	  }
+	%>
+	</br></br>
+	<form action = "LogoutController" method = "post">
+	<input type = "submit" value = "Logout" />
+	</form><br/>
+</div>
 </body>
 </html>
