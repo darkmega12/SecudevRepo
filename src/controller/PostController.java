@@ -50,6 +50,7 @@ public class PostController extends HttpServlet {
 			request.getSession().setAttribute("posts", posts);
 			request.getSession().setAttribute("accounts", accounts);
 			request.getSession().setAttribute("total", total);
+			
 		}
 		catch(Exception e)
 		{
@@ -69,15 +70,17 @@ public class PostController extends HttpServlet {
 		try
 		{
 			String message = "";
+			System.out.println(request.getParameter("message"));
 			if(request.getParameter("message") != null)
 			{
 				message = request.getParameter("message");
 			}
-			if(message.equals(""))
+			else if(message.equals(""))
 			{
 				session.setAttribute("errors", "No message input.");
 				noErrors = false;
 			}
+			/*
 			else
 			{				
 				message = validate.sanitizePost(request.getParameter("message"));
@@ -96,11 +99,12 @@ public class PostController extends HttpServlet {
 			        }
 	
 				//imagepath = (String)request.getParameter("attachment");
+			}*/
 				Account account = (Account)session.getAttribute("account");
 				DatabaseCon db = new DatabaseCon();
-				System.out.println("Attachment = "+filePart.getContentType());
-				Post currPost = db.createPost(account.getUsername(), message, inputStream,filePart.getContentType());
-			}
+				//System.out.println("Attachment = "+filePart.getContentType());
+				Post currPost = db.createPost(account.getUsername(), message);
+			
 		}
 		catch(Exception e)
 		{
@@ -112,6 +116,10 @@ public class PostController extends HttpServlet {
 		if(session.getAttribute("postnum") == null)
 		{
 			session.setAttribute("postnum", 1);
+		}
+		if(noErrors)
+		{
+			session.setAttribute("success", "Post created successfully.");
 		}
 		response.sendRedirect("CreatePost.jsp");
 	}

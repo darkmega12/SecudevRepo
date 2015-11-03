@@ -10,6 +10,12 @@
 	body{
 		background-color: rgb(149, 165, 166);
 	}
+	#errors{
+		color: red;
+	}
+	#success{
+		color: green;
+	}
 </style>
 <body>
 	<% if(session.getAttribute("account") == null) 
@@ -39,8 +45,7 @@
 		Bold: Enclose string in [b] and [/b] <br>
 		Italic: Enclose string in [i] and [/i] <br>
 	</p>
-	<form action="PostController" method="post" enctype="multipart/form-data">
-	
+	<form action="PostController" method="post">
 		<table>
 			<tr><td>POST: <textarea name="message" rows="8"></textarea></td></tr>
 			<tr><td>Attachment: <input type="file" name="attachment"/></td></tr>

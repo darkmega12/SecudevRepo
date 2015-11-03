@@ -161,14 +161,18 @@ else
 					<form action = "EditPostController" method="post">
 						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
 						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
-						<input type="submit" class="sub" name="edit" value="edit"/>
-						<input type="submit" class="sub" name="edit" value="delete">
+						<input type="submit" class="sub" value="edit"/>
+					</form>
+					<form action = "DeletePostController" method="post">
+						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
+						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
+						<input type="submit" class="sub" value="delete"/>
 					</form>
 				<% } %>
 				<br>
 				<%= posts.get(i).getMessage() %> <br><br>
 				
-				<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
+				<!-- <img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img> -->
 				<% out.print(formatter.format(posts.get(i).getDateModified())); %>
 				</div>
 			</td>
@@ -182,8 +186,8 @@ else
 
 <form action="PostController" method="get">
 PAGE NUMBER: 
-<% 	int total_pages = ((int)session.getAttribute("total")) / 10; 
-	if((int)session.getAttribute("total") % 10 > 0)
+<% 	int total_pages = (Integer)session.getAttribute("total") / 10; 
+	if(((Integer) session.getAttribute("total")) % 10 > 0)
 		total_pages++;
 	for(int i=1; i <= total_pages; i++) { %>
 		<input type="submit" name="page_num" id="page_footer" class="sub" value = <%= i %>>

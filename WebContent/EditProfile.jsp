@@ -164,11 +164,7 @@
         <input type="password" id="password" name="password" class="form-control" value = <%= curr.getPassword() %>>
         
         <% 
-    	if(session.getAttribute("isAdmin") != null){
-	    	boolean isAdmin = (boolean)session.getAttribute("isAdmin"); 
-	
-	    	
-			if(isAdmin) 
+			if(curr.isAdmin()) 
 			{
 				out.println("<label class='control-label' for='AccessControl'>Access Control</label>");
 				out.println("<select id='AccessControl' class='form-control' name='accesscontrollolplsdonthack'>"
@@ -176,7 +172,6 @@
 						+"<option value ='User'>User</option>"
 					+"</select>");
 			}	
-		}
 		%>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>

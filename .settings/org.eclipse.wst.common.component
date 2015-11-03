@@ -2,6 +2,7 @@
     <wb-module deploy-name="TestSecuProj">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/" source-path="/WebContent/WEB-INF"/>
+        <wb-resource deploy-path="/" source-path="/WebContent"/>
         <property name="context-root" value="TestSecuProj"/>
         <property name="java-output-path" value="/TestSecuProj/build/classes"/>
     </wb-module>

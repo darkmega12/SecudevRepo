@@ -37,18 +37,32 @@ public class DatabaseCon {
 	
 	public DatabaseCon()
 	{
-		this.user = "root";
-		this.password = "p@ssword";
+		this.user = "b1de8e11f2b535";
+		this.password = "2c77e8b1";
+	}
+	
+	public Connection getConnection()
+	{
+		return dbConnection;
 	}
 	
 	public void open()
 	{
 		try{
-			String url = "jdbc:mysql://localhost:3306/secudevs18";
+			/* * For deployed Connection to deployed database
+			InitialContext context = new InitialContext();
+			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
+			dbConnection = ds.getConnection(user, password);
+			 * */
+			
+			/* * For tomcat connection to deployed database * */
 			Class.forName("com.mysql.jdbc.Driver");
-			dbConnection = DriverManager.getConnection(url, this.user, this.password);
+			//String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
+			//dbConnection = DriverManager.getConnection(url, this.user, this.password);
+			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
 		} catch(Exception e)
 		{
+			System.out.println("weeee");
 			System.out.println(e);
 		}
 	}
@@ -276,6 +290,10 @@ public class DatabaseCon {
 		{
 			
 		}
+		finally
+		{
+			close();
+		}
 		return isLegit;
 	}
 	
@@ -285,10 +303,6 @@ public class DatabaseCon {
 		open();
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/secudevs18";
-			
-			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
 			String query = "select * from post order by id desc limit 1";
 			Statement statement = dbConnection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
@@ -306,29 +320,27 @@ public class DatabaseCon {
 		return tempPost;
 	}
 	
-	public Post createPost(String username, String message, InputStream attachment, String imagename)
+	public Post createPost(String username, String message)
 	{
 		tempPost = null;
+		open();
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/secudevs18";
-			
-			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			String postQuery = "insert into posts (username, message, attachment, datecreated, datemodified, imagename) values (?,?,?,?,?,?)";
+			String postQuery = "insert into posts (username, message, datecreated, datemodified) values (?,?,?,?)";
 			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
 			
 			java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 			
 			createPost.setString(1, username);
 			createPost.setString(2, message);
-	        if (attachment != null) {
+	        /*
+			if (attachment != null) {
                 // fetches input stream of the upload file for the blob column
                 createPost.setBlob(3, attachment);
                 System.out.println("Printed Blob Success!");
-            }
+            }*/
+			createPost.setDate(3, dateToday);
 			createPost.setDate(4, dateToday);
-			createPost.setDate(5, dateToday);
-			createPost.setString(6, imagename);
+//			createPost.setString(6, imagename);
 			createPost.executeUpdate();
 			
 			dbConnection.close();
@@ -336,6 +348,9 @@ public class DatabaseCon {
 		} catch(Exception e)
 		{
 			System.out.println(e);
+		} finally 
+		{
+			close();
 		}
 		return tempPost;
 	}
@@ -372,7 +387,6 @@ public class DatabaseCon {
 			}
 			
 			modifyPost.executeUpdate();
-			dbConnection.close();
 		}
 		catch(Exception e)
 		{
@@ -596,6 +610,30 @@ public class DatabaseCon {
 		return postList;
 	}
 
+	/***
+	 * 
+	 *  IMAGE
+	 * 
+	 ***/
+	
+	public ResultSet getImage(int post_id)
+	{
+		ResultSet set = null;
+		open();
+		try {
+			String postQuery = "SELECT attachment,imagename FROM posts WHERE post_id = ?";
+			PreparedStatement pstmt = dbConnection.prepareStatement(postQuery);
+	        pstmt.setInt(1, post_id);
+	        set = pstmt.executeQuery();
+		} catch(SQLException e) {
+			System.out.println(e);
+			return null;
+		} finally {
+			close();
+		}
+		return set;
+	}
+	
 	/** EXPORT **/
 		/*EXPORTCSV*/
 	public boolean exportCSV()
@@ -644,6 +682,10 @@ public class DatabaseCon {
             
             return false;
         }
+        	finally
+    	{
+    		close();
+    	}
 	}
 
 	public boolean saveToSQL(String filename)
@@ -680,6 +722,8 @@ public class DatabaseCon {
 	        ex.printStackTrace();
 
             return false;
+	    } finally {
+	    	close();
 	    }
         
 		return false;
@@ -749,6 +793,8 @@ public class DatabaseCon {
 		} catch (IOException ex) {
 	        ex.printStackTrace();
 		    return false;
+	    } finally {
+	    	close();
 	    }
 		
 	}
