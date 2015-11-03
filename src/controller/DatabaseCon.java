@@ -352,6 +352,9 @@ public class DatabaseCon {
 		{
 			close();
 		}
+
+		updateUserPosts(username);
+
 		return tempPost;
 	}
 	
@@ -795,8 +798,140 @@ public class DatabaseCon {
 		    return false;
 	    } finally {
 	    	close();
-	    }
+	    }	
+	}
+
+	// BADGES
+
+	public void updateUserPosts(String username)
+	{
+		int count = countUserPosts(username);
+		open();
+
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totCount=" + count + " WHERE username=" + username);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+	}
+
+	public int countUserPosts(String username) 
+	{
+		int count = 0;
+
+		open();
+
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("SELECT count(*) FROM posts WHERE username = " + username);
+			count = rs.getInt(1);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+
+		return count;
+	}
+
+	public void updateUserDonations(String username)
+	{
+		int count = countDonations(username);
+		open();
+
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totDonate=" + count + " WHERE username=" + username);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+	}
+
+	public int countDonations(String username) 
+	{
+		int count = 0;
+
+		open();
 		
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("SELECT sum(amount) FROM donations WHERE username = " + username);
+			numPost = rs.getInt(1);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+
+		return count;
+	}
+
+	public void updateUserTrans(String username)
+	{
+		int count = countTrans(username);
+		open();
+
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totTrans=" + count + " WHERE username=" + username);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+	}
+
+	public int countTrans(String username) 
+	{
+		int count = 0;
+
+		open();
+		
+		try
+		{
+			Statement numPosts = dbConnection.createStatement();
+			ResultSet rs = numPosts.executeQuery("SELECT sum(quantity*amount) FROM transactions WHERE username = " + username);
+			numPost = rs.getInt(1);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+		return count;
 	}
 
 }

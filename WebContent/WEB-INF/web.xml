@@ -39,10 +39,9 @@
     <servlet-class>controller.EditPostController</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>Image</servlet-name>
-  	<servlet-class>controller.ImageServlet</servlet-class>
+    <servlet-name>Image</servlet-name>
+    <servlet-class>controller.ImageServlet</servlet-class>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
     <url-pattern>/user</url-pattern>
@@ -76,8 +75,7 @@
     <url-pattern>/user/edit/post</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>Image</servlet-name>
-  	<url-pattern>/images</url-pattern>
+    <servlet-name>Image</servlet-name>
+    <url-pattern>/images</url-pattern>
   </servlet-mapping>
-  
 </web-app>

@@ -10,7 +10,6 @@ public class Post {
 	private Date dateCreated;
 	private Date dateModified;
 	
-	
 	public Post(int postid, String username, String text, String attachment, Date dateCreated, Date dateModified) 
 	{
 		this.postid = postid;
