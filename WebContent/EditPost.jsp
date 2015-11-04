@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="model.Account"%>
+    pageEncoding="ISO-8859-1" import="model.Account,model.Post"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -39,10 +39,16 @@
 		Bold: Enclose string in [b] and [/b] <br>
 		Italic: Enclose string in [i] and [/i] <br>
 	</p>
-	<form action="PostController" method="post">
+	<form action="EditPostController" method="post">
 		<table>
-			<tr><td>POST: <textarea name="message" rows="8"></textarea></td></tr>
-			<!-- PLEASE ADD VALUE of file, kung kaya  -->
+			<tr><td>POST: <textarea name="message" rows="8">
+			<% if(session.getAttribute("currEdit")!= null) {
+					Post currEdit = (Post)session.getAttribute("currEdit");
+			%>
+			<%= currEdit.getMessage() %>
+			
+			<% } %>
+			</textarea></td></tr>
 			<tr><td>Attachment: <input type="file" name="attachment"/></td></tr>
 			<tr><td><input type="submit" value="Post!"/></td></tr>
 		</table>

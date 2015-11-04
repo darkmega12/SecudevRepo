@@ -158,12 +158,12 @@ else
 					out.print(formatter.format(posts.get(i).getDateCreated()));
 				%> 
 				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
-					<form action = "EditPostController" method="post">
+					<form action = "EditPostController" method="get">
 						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
 						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
 						<input type="submit" class="sub" value="edit"/>
 					</form>
-					<form action = "DeletePostController" method="post">
+					<form action = "DeletePostController" method="get">
 						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
 						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
 						<input type="submit" class="sub" value="delete"/>

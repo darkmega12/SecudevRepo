@@ -18,11 +18,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import model.Account;
+import model.Item;
 import model.Post;
 
 
@@ -49,17 +52,17 @@ public class DatabaseCon {
 	public void open()
 	{
 		try{
-			/* * For deployed Connection to deployed database
+			//For deployed Connection to deployed database
 			InitialContext context = new InitialContext();
 			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
 			dbConnection = ds.getConnection(user, password);
-			 * */
+			
 			
 			/* * For tomcat connection to deployed database * */
-			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("com.mysql.jdbc.Driver");
 			//String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
 			//dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
+			//dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
 		} catch(Exception e)
 		{
 			System.out.println("weeee");
@@ -264,7 +267,84 @@ public class DatabaseCon {
 		}
 		return tempAccount;
 	}
+	/*Item*/
 	
+	public void createItem(Item n)
+	{
+		open();
+		try{
+			String postQuery = "insert into items (itemid, itemname, itemdescription, itemprice, itemimage, imagetype) values (?,?,?,?,?,?)";
+			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
+			
+			createPost.setInt(1, getLastItemId() + 1);
+			createPost.setString(2, n.getName());
+			createPost.setString(3, n.getDescription());
+			createPost.setFloat(4, n.getPrice());
+			createPost.setBlob(5, n.getImage());
+			createPost.setString(6, n.getImageType());
+
+			createPost.executeUpdate();
+			
+		} catch(Exception e)
+		{
+			System.out.println(e);
+		} finally
+		{
+			close();
+		}
+	}
+	public int getLastItemId()
+	{
+		open();
+		try
+		{
+			String query = "select * from items order by itemid desc limit 1";
+			Statement statement = dbConnection.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			rs.next();
+		
+			return rs.getInt(1);
+			
+		} catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+		return 0;
+	}
+	
+	public ArrayList<Item> getItems()
+	{
+		ArrayList<Item> postList = new ArrayList<Item>();
+		open();
+		try
+		{
+			PreparedStatement getPosts;
+			String query = "Select * from items order by itemid";
+			getPosts = dbConnection.prepareStatement(query);
+			ResultSet rs = getPosts.executeQuery();
+			Item k;
+			while(rs.next())
+			{
+				k = new Item(rs.getString(2), rs.getString(3),rs.getString(6), rs.getFloat(4));
+				k.setId(rs.getInt(1));
+				
+				postList.add(k);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+		return postList;
+	}
 	/*******************
 	 * 
 	 * 		POST
@@ -358,7 +438,7 @@ public class DatabaseCon {
 		return tempPost;
 	}
 	
-	public void modifyPost(int postid, String message, String attachment, boolean isEdit)
+	public void modifyPost(int postid, String message, boolean isEdit)
 	{
 		open();
 		try
@@ -367,7 +447,7 @@ public class DatabaseCon {
 			String query;
 			if(isEdit)
 			{
-				query = "update posts set message = ?, attachment = ?, datemodified = ? where postid = ?";
+				query = "update posts set message = ?, datemodified = ? where postid = ?";
 			}
 			else
 			{
@@ -380,9 +460,8 @@ public class DatabaseCon {
 			{
 				java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 				modifyPost.setString(1, message);
-				modifyPost.setString(2, attachment);
-				modifyPost.setDate(3, dateToday);
-				modifyPost.setInt(4, postid);
+				modifyPost.setDate(2, dateToday);
+				modifyPost.setInt(3, postid);
 			}
 			else
 			{
@@ -869,7 +948,7 @@ public class DatabaseCon {
 
 	public int countDonations(String username) 
 	{
-		int count = 0;
+		int count = 0, numPost;
 
 		open();
 		
@@ -913,7 +992,7 @@ public class DatabaseCon {
 
 	public int countTrans(String username) 
 	{
-		int count = 0;
+		int count = 0, numPost;
 
 		open();
 		

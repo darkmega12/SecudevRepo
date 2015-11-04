@@ -74,6 +74,7 @@ public class PostController extends HttpServlet {
 			if(request.getParameter("message") != null)
 			{
 				message = request.getParameter("message");
+				message = validate.sanitizePost(request.getParameter("message"));
 			}
 			else if(message.equals(""))
 			{
