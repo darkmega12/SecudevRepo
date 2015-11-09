@@ -195,4 +195,36 @@
 		width:300px;
 		height:100px;
 	}
+	
+	#advance_search, .search_preferences{
+		margin-left:40px;
+		margin-top: 30px;
+	}
+	
+	.add_field_button{
+		width:300px;
+		height:30px;
+		font-size: 15px;
+		color: #FFFFFF;
+	    background-color: #8AC007;
+	    margin-bottom: 10px;
+	}
+	
+	.input_fields_wrap button:hover , button:active {
+		background-color: #ffffff;
+		color:green;
+	    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	}
+	
+	.input_fields_wrap input{
+		width:300px;
+		margin-bottom: 10px;
+	}
+	.input_fields_wrap select{
+		margin-left:10px;
+	}
+	.remove_field{
+		margin-left: 10px;
+	}
+	
 </style>

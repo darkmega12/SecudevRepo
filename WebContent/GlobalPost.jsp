@@ -4,6 +4,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Forums</title>
 <style>
@@ -37,53 +38,28 @@
 			<div id="basic_search">
 				<input type="text" placeholder="Search..." name="search"/>
 			</div>
-			Advance Search:
+			
 			<div id="advance_search">
-				<div id="search_adv1">
-					<input name="search1" /> 
-					<select name="searchtype1">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-					<select name="logicgate1">
-						<option value="N/A">N/A</option>
-						<option value="OR">OR</option>
-						<option value="AND">AND</option>
-					</select>
-				</div>
-				<div id="search_adv2">
-					<input name="search2" /> 
-					<select name="searchtype2">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-					<select name="logicgate2">
-						<option value="N/A">N/A</option>
-						<option value="OR">OR</option>
-						<option value="AND">AND</option>
-					</select>
-				</div>
-				<div id="search_adv3">
-					<input name="search3" /> 
-					<select name="searchtype3">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-				</div>
+				Advance Search:
+					<div class="input_fields_wrap">
+					    <button class="add_field_button">Add Criteria</button>
+					    <div>
+						    <input type="text" name="mytext[]">
+						    <select name="searchtype1">
+							    <option value="username">Username</option>
+								<option value="message">Post</option>
+								<option value="before date">Before Date</option>
+								<option value="after date">After Date</option>
+								<option value="during date">On Date</option>
+						    </select>
+					    </div>
+					</div>
 			</div>
-			<div>
+			<div class="search_preferences">
 				<b>Date Format: YYYY-MM-DD</b><br>
-				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
-				Advanced<input type="radio" name="searchType" value="advanced"/>
+				Type of Search: <input type="radio" name="searchType" value="basic" checked/> Basic
+				<input type="radio" name="searchType" value="advanced"/> Advanced
+				</br></br>
 				<input type="submit" value="Search"/>
 			</div>
 		</form>
@@ -155,6 +131,27 @@ PAGE NUMBER:
 <% } %>
 </form>
 </div>
-<% } %>
+<% } %>	
+
+<script>
+$(document).ready(function() {
+    var max_fields      = 20; //maximum input boxes allowed
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div><input type="text" name="mytext[]"/><select name="searchtype1"><option value="username">Username</option><option value="message">Post</option><option value="before date">Before Date</option><option value="after date">After Date</option><option value="during date">On Date</option></select><a href="#" class="remove_field">Remove</a></div>'); //add input box
+        }
+    });
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
+</script>
 </body>
 </html>

@@ -116,48 +116,11 @@ public class ItemController extends HttpServlet {
 						else if(action.equals("Edit"))
 						{
 							System.out.println("Edits");
-							//Post p = db.getPost(post_id);
-							//request.getSession().setAttribute("editid", post_id);
-							//request.getSession().setAttribute("editpost",p);
 						}
 						else if(action.equals("Remove"))
 						{
-							/*String message = "";
-							//String imagepath = "";
-							if(request.getParameter("message") != null)
-							{
-								message = request.getParameter("message");
-							}
-							System.out.println("Message:" +message);
-							int total = db.numPosts();
-							int page_num = 1;
-							message = validate.sanitizePost(message);
-							System.out.println("I Edited!");
-							Part filePart = request.getPart("attachment");
-							System.out.println("I Edited!");
-							InputStream inputStream = null;
-							if(filePart != null)
-							{
-								inputStream = filePart.getInputStream();
-							}
-							int yo = (Integer)request.getSession().getAttribute("editid");
-							System.out.println(yo);
-							System.out.println("I Edited!");
-							
-						
-							dbConnection.modifyPost(yo , message, inputStream, true);
-							System.out.println("I Edited!");
-							ArrayList<Post> posts = db.getGlobalPosts(page_num);
-							
-							request.getSession().setAttribute("posts", posts);
-							request.getSession().setAttribute("total", total);
-							
-							executed = true;*/
+
 						}
-					
-					
-					
-				
 			}
 			}
 			

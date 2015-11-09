@@ -582,7 +582,7 @@ public class DatabaseCon {
 		{
 			String editValue= "%"+value+"%";
 			PreparedStatement basicSearch;
-			String query = "Select * from posts where message like ?";
+			String query = "Select * from posts where message like ? and deleted = 0";
 			basicSearch = dbConnection.prepareStatement(query);
 			basicSearch.setString(1, editValue);
 			ResultSet rs = basicSearch.executeQuery();
