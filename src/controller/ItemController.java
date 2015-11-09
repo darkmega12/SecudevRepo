@@ -1,14 +1,9 @@
 package controller;
 
-/*
-* This servlet handles the session where the user edits or deletes a post
-*/
-
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,19 +16,23 @@ import javax.servlet.http.Part;
 
 import authentication.PostAuthentication;
 import model.Account;
+import model.Item;
 import model.Post;
+
+
+
 /**
- * Servlet to handle edit/delete post requests
+ * Servlet implementation class ItemController
  */
-@WebServlet("/EditPostController")
+@WebServlet("/ItemController")
 @MultipartConfig(maxFileSize = 16177215)
-public class EditPostController extends HttpServlet {
+public class ItemController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditPostController() {
+    public ItemController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,10 +42,23 @@ public class EditPostController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		try
+		{
+			DatabaseCon db = new DatabaseCon();
 
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
+			ArrayList<Item> items = db.getItems();
+			HashMap<String, Account> accounts = db.getUsers();
+			request.getSession().setAttribute("items", items);
+			request.getSession().setAttribute("accounts", accounts);
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		response.sendRedirect("Store.jsp");
 	}
+
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,45 +71,58 @@ public class EditPostController extends HttpServlet {
 		boolean executed = false; //flag for if the changes were executed or not
 		try
 		{
-			String action = request.getParameter("edit");
+			String action = request.getParameter("itemsel");
 			System.out.println("action:"+action);
 			DatabaseCon db = new DatabaseCon();
 			if(action != null)
 			{
-			int post_id = Integer.parseInt(request.getParameter("post_id"));
-			String username = request.getParameter("username");
-			
 			Account currAccount = (Account)request.getSession().getAttribute("account");
-			if(currAccount.isAdmin() || currAccount.getUsername().equals(request.getAttribute("username")))
+			if(currAccount.isAdmin())
 			{
-				if(dbConnection.authenticatePost(post_id, username)) //checks if the right username is with the right post
-				{
-				
 					
-						if(action.equals("delete"))
+						if(action.equals("Add"))
 						{
 							
-							int total = db.numPosts();
-							int page_num = 1;
-							System.out.println("I deleted!");
-							dbConnection.modifyPost(post_id, "", null, false);
-							ArrayList<Post> posts = db.getGlobalPosts(page_num);
+							System.out.println("Adding");
+							  InputStream inputStream = null; // input stream of the upload file
+							  String name = request.getParameter("itemname");
+							  String desc = request.getParameter("itemdesc");
+							  float price = Float.parseFloat(request.getParameter("itemprice"));
+						        // obtains the upload file part in this multipart request
+						        Part filePart = request.getPart("attachment");                                          
+						        if (filePart != null) {
+						            // prints out some information for debugging
+						            System.out.println(filePart.getName());
+						            System.out.println(filePart.getSize());
+						            System.out.println(filePart.getContentType());
+						             
+						            // obtains input stream of the upload file
+						            inputStream = filePart.getInputStream();
+						        }
+
+							//imagepath = (String)request.getParameter("attachment");
+							Account account = (Account)session.getAttribute("account");
+							System.out.println("Attachment = "+filePart.getContentType());
 							
-							request.getSession().setAttribute("posts", posts);
-							request.getSession().setAttribute("total", total);
+							Item k = new Item(name,desc,filePart.getContentType(),price);
+							k.setImage(inputStream);
+							db.createItem(k);
+							
+							ArrayList<Item> it = db.getItems();
+							request.getSession().setAttribute("items", it);
 							
 							executed = true;
 						}
-						else if(action.equals("edit"))
+						else if(action.equals("Edit"))
 						{
 							System.out.println("Edits");
-							Post p = db.getPost(post_id);
-							request.getSession().setAttribute("editid", post_id);
-							request.getSession().setAttribute("editpost",p);
+							//Post p = db.getPost(post_id);
+							//request.getSession().setAttribute("editid", post_id);
+							//request.getSession().setAttribute("editpost",p);
 						}
-						else if(action.equals("editpost"))
+						else if(action.equals("Remove"))
 						{
-							String message = "";
+							/*String message = "";
 							//String imagepath = "";
 							if(request.getParameter("message") != null)
 							{
@@ -127,12 +152,12 @@ public class EditPostController extends HttpServlet {
 							request.getSession().setAttribute("posts", posts);
 							request.getSession().setAttribute("total", total);
 							
-							executed = true;
+							executed = true;*/
 						}
 					
 					
 					
-				}
+				
 			}
 			}
 			
@@ -142,10 +167,9 @@ public class EditPostController extends HttpServlet {
 		}
 		if(!executed)
 		{
-			response.sendRedirect("EditPost.jsp");
+			response.sendRedirect("Store.jsp");
 		}
 		else
-			response.sendRedirect("GlobalPost.jsp");
+			response.sendRedirect("Store.jsp");
 	}
-
 }

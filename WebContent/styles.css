@@ -1,0 +1,198 @@
+@CHARSET "ISO-8859-1";
+<style>
+	body{	
+	    margin-top: 0px;
+	    margin-right: 0px;
+	    margin-left: 0px;
+	    margin-bottom: 0px;
+	}
+	
+	#rcorners2 {
+    border-radius: 25px;
+    border: 2px solid #8AC007;
+    padding: 20px; 
+    width: 350px;
+    height: 450px; 
+	}
+		
+	#nav{
+		background-color: green; width:auto; height:100px;
+		margin:0px; padding:0px;
+	}
+	#nav h1{
+		display: inline-block;
+		width:400px;
+		float:right;
+		font-size: 50px;
+		color:green;
+		text-shadow: 5px 2px white;
+	}
+	#nav a{
+		display: inline-block;
+		margin-left:30px;
+		margin-top:70px;
+		text-decoration: none;
+		font-family: Helvetica;
+		color: White;
+	}
+	#nav a:hover , a:active{
+		text-decoration: underline;
+	}
+	#left-nav{
+		float:left;
+		width: 300px;
+		height:1000px;
+		border-right: 1px solid gray;
+	}
+	#left-nav a{
+		margin-left:30px;
+	}
+	#left-nav .paypal{
+		margin: 20px;
+	}
+	#left-nav button{
+		width:300px;
+		height:30px;
+		font-size: 15px;
+		color: #FFFFFF;
+	    background-color: #8AC007;
+	}
+	
+	#left-nav button:hover , button:active {
+		background-color: #ffffff;
+		color:green;
+	    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	}
+	
+	#left-nav select{
+		width: 130px;
+		float:right;
+		margin-right:10px;
+		margin-top:5px;
+	}
+	.item .btn{
+		width:200px;
+		height:30px;
+		margin-left:20px;
+		font-size: 15px;
+		border-radius: 5px;
+		color: #FFFFFF;
+	    background-color: #8AC007;
+	    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	}
+	.item .btn:hover , .btn:active {
+		background-color: #ffffff;
+		color:green;
+	    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	}
+
+	.container{
+		width:1000px;
+		height:1000px;
+		margin-left: 320px;
+	}
+	
+	.shop{
+		width:750px;
+		height:1000px;
+		margin-left:130px;
+		margin-right:100px;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	}
+	.item img{
+		width:300px;
+		height:300px;
+		display:inline;
+		float:right;
+	}
+	.item h2, .item h1{
+	margin-top:30px;
+		clear:none; width: 400px;display:inline;float:left;margin-left:40px;
+	}
+	.item p{
+		clear:none; width:400px;display:inline;float:left; margin-left:40px; margin-top:30px;
+	}
+	
+	.align{
+		text-align: center;
+	}
+	.demo {
+		border:1px solid #C0C0C0;
+		border-collapse:collapse;
+		padding:10px;
+		width: 100%;
+	}
+	.demo th {
+		border:1px solid #C0C0C0;
+		padding:10px;
+		background:#F0F0F0;
+	}
+	.demo td {
+		border:1px solid #C0C0C0;
+		padding:10px;
+	}
+	
+	#content {
+		float: left;
+		width: 80%;
+		
+	}
+	
+	#footer {
+		
+		position: relative;
+		float: left;
+		width: 100%;
+	}
+	
+	#page_footer {
+		font-size: 18px;
+	}
+	
+	.sub { 
+     background: none;
+     border: none;
+     color: #0066ff;
+     text-decoration: underline;
+     cursor: pointer; 
+	}
+	
+	#basic_search input, #basic_search input:focus{
+		outline:none;
+		border-radius: 10px;
+		margin-left: 40px;
+		margin-top: 10px;
+		width: 90%;
+		height: 40px;
+		font-size: 25px;
+		
+	}
+	
+	#overlay {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     z-index: 1000;
+	}
+	
+	#overlay div {
+     width:350px;
+     margin: 170px auto;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+	}
+	
+	.modal{
+		width:350px;
+		height:400px;
+	}
+	
+	.modal textarea{
+		width:300px;
+		height:100px;
+	}
+</style>

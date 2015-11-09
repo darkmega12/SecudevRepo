@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Home</title>
 </head>
@@ -10,14 +11,6 @@
 	body{
 		background-color: white;
 	}
-	
-	#rcorners2 {
-    border-radius: 25px;
-    border: 2px solid #8AC007;
-    padding: 20px; 
-    width: 350px;
-    height: 450px; 
-}
 </style>
 <body>
 
@@ -42,13 +35,14 @@
 			out.print(formatter.format(curr.getBirthday()));
 			%></p]>
 	<p> Gender: <%=curr.getGender() %></p>
-	<p> Date Joined: <%= curr.getDateJoined() %> </p>
+	<p> Date Joined: <%= (curr.getDateJoined().getMonth()+1) +"/" +curr.getDateJoined().getDate() + "/" + 
+		(curr.getDateJoined().getYear()+1900) %> </p>
 	<p> About Me: <%= curr.getAboutme() %> </p>
 	
 	<a href='EditProfile.jsp'>Edit Profile </a><br/>
 	<a href='CreatePost.jsp'>Post Message</a><br/></br>
 	<a href='Store.jsp'>The Store</a><br>
-	<a href='PostController'>View Forum</a><br>
+	<a href='PostController'>View Forums</a><br>
 	<% if(curr.isAdmin()) { %>
 	<a href='Backup.jsp'>Create Backup</a></br>
 	<% } %>

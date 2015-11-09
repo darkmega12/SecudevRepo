@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.Account;
+import model.Item;
 import model.Post;
 
 
@@ -247,6 +248,94 @@ public class DatabaseCon {
 	
 	/*******************
 	 * 
+	 * 		ITEM
+	 * 
+	 ******************/
+	
+	public void createItem(Item n)
+	{
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/secudevs18";
+			
+			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
+			String postQuery = "insert into items (itemid, itemname, itemdescription, itemprice, itemimage, imagetype) values (?,?,?,?,?,?)";
+			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
+			
+			createPost.setInt(1, getLastItemId() + 1);
+			createPost.setString(2, n.getName());
+			createPost.setString(3, n.getDescription());
+			createPost.setFloat(4, n.getPrice());
+			createPost.setBlob(5, n.getImage());
+			createPost.setString(6, n.getImageType());
+
+			createPost.executeUpdate();
+			
+			dbConnection.close();
+		} catch(Exception e)
+		{
+			System.out.println(e);
+		}
+	}
+	public int getLastItemId()
+	{
+		open();
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/secudevs18";
+			
+			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
+			String query = "select * from items order by itemid desc limit 1";
+			Statement statement = dbConnection.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			rs.next();
+		
+			return rs.getInt(1);
+			
+		} catch(Exception e)
+		{
+			
+		}
+		finally
+		{
+			close();
+		}
+		return 0;
+	}
+	
+	public ArrayList<Item> getItems()
+	{
+		ArrayList<Item> postList = new ArrayList<Item>();
+		open();
+		try
+		{
+			PreparedStatement getPosts;
+			String query = "Select * from items order by itemid";
+			getPosts = dbConnection.prepareStatement(query);
+			ResultSet rs = getPosts.executeQuery();
+			Item k;
+			while(rs.next())
+			{
+				k = new Item(rs.getString(2), rs.getString(3),rs.getString(6), rs.getFloat(4));
+				k.setId(rs.getInt(1));
+				
+				postList.add(k);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			close();
+		}
+		return postList;
+	}
+	
+	/*******************
+	 * 
 	 * 		POST
 	 * 
 	 ******************/
@@ -273,6 +362,27 @@ public class DatabaseCon {
 		return isLegit;
 	}
 	
+	public Post getPost(int post_id)
+	{
+		open();
+		try
+		{
+			String query = "Select * from posts where post_id = ?";
+			PreparedStatement authenticatePost = dbConnection.prepareStatement(query);
+			authenticatePost.setInt(1, post_id);
+			ResultSet rs = authenticatePost.executeQuery();
+			rs.next();
+			
+			Post tempPost = new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6));
+			return tempPost;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;
+	}
+	
 	public Post getLast()
 	{
 		tempPost = null;
@@ -283,7 +393,7 @@ public class DatabaseCon {
 			String url = "jdbc:mysql://localhost:3306/secudevs18";
 			
 			Connection dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			String query = "select * from post order by id desc limit 1";
+			String query = "select * from posts order by id desc limit 1";
 			Statement statement = dbConnection.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			rs.next();
@@ -334,7 +444,7 @@ public class DatabaseCon {
 		return tempPost;
 	}
 	
-	public void modifyPost(int postid, String message, String attachment, boolean isEdit)
+	public void modifyPost(int postid, String message, InputStream attachment, boolean isEdit)
 	{
 		open();
 		try
@@ -343,7 +453,7 @@ public class DatabaseCon {
 			String query;
 			if(isEdit)
 			{
-				query = "update posts set message = ?, attachment = ?, datemodified = ? where postid = ?";
+				query = "update posts set message = ?, attachment = ?, datemodified = ? where post_id = ?";
 			}
 			else
 			{
@@ -356,7 +466,10 @@ public class DatabaseCon {
 			{
 				java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 				modifyPost.setString(1, message);
-				modifyPost.setString(2, attachment);
+		                // fetches input stream of the upload file for the blob column
+		                modifyPost.setBlob(2, attachment);
+		                System.out.println("Printed Blob Success!");
+
 				modifyPost.setDate(3, dateToday);
 				modifyPost.setInt(4, postid);
 			}

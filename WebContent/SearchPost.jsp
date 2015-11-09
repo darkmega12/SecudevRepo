@@ -3,74 +3,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Post-its here!</title>
+<title>Forums</title>
 <style>
-	.align{
-		text-align: center;
-	}
-	.demo {
-		border:1px solid #C0C0C0;
-		border-collapse:collapse;
-		padding:10px;
-		width: 100%;
-	}
-	.demo th {
-		border:1px solid #C0C0C0;
-		padding:10px;
-		background:#F0F0F0;
-	}
-	.demo td {
-		border:1px solid #C0C0C0;
-		padding:10px;
-	}
-	
-	#content {
-		float: left;
-		width: 80%;
-		
-	}
-	
-	#footer {
-		
-		position: relative;
-		float: left;
-		width: 100%;
-	}
-	
-	#page_footer {
-		font-size: 18px;
-	}
-	
-	.sub { 
-     background: none;
-     border: none;
-     color: #0066ff;
-     text-decoration: underline;
-     cursor: pointer; 
-}
+	body{	
+	    margin-top: 0px;
+	    margin-right: 0px;
+	    margin-left: 0px;
+	    margin-bottom: 0px;
+		}
 </style>
 </head>
 <body>
-
-<% if(session.getAttribute("account") == null) 
-{
-	response.sendRedirect("index.jsp");
-}
-else
-{
-	Account curr = (Account) session.getAttribute("account");
-	boolean isAdmin = curr.isAdmin();
-%>
-
-<h2>Search Posts</h2>
-<h3><a href="HomePage.jsp">Home</a></h3>
+	<div id="nav">
+			<h1>FORUMS</h1>
+			<a href="HomePage.jsp">Home</a>
+			<a href='PostController'>View Forums</a>
+			<a href="Store.jsp">Store</a><br>
+	</div>
+	<% if(session.getAttribute("account") == null) 
+	{
+		response.sendRedirect("index.jsp");
+	}
+	else
+	{
+		Account curr = (Account) session.getAttribute("account");
+		boolean isAdmin = curr.isAdmin();
+	%>
 
 	<div id="search_pane">
 		<form action="SearchController" method="get">
 			<div id="basic_search">
-			Basic Search:
-				<input name="search"/>
+				<input type="text" placeholder="Search..." name="search"/>
 			</div>
 			Advance Search:
 			<div id="advance_search">
@@ -124,59 +89,59 @@ else
 		</form>
 	</div>
 	<br/>
-<div id = "content">
-	<table class="demo">
-		<thead>
-		<tr>
-			<th>Account</th>
-			<th>Post</th>
-		</tr>
-		</thead>
-		<tbody>
-		<% 
-			@SuppressWarnings (value="unchecked")
-			HashMap<String, Account> accounts = (HashMap<String, Account>)session.getAttribute("accounts");
-			@SuppressWarnings (value="unchecked")
-			ArrayList<Post> posts = (ArrayList<Post>)session.getAttribute("posts");
-			Account tempAccount;
-		%>
-		<% for(int i = 0; i < posts.size(); i++){ %>
-		<tr>
-			<td>
-				<div class="align">
-				<% tempAccount = accounts.get(posts.get(i).getUsername()); %>
-				<%= tempAccount.getfName() %> <br/>
-				<form action="EditProfileController" method="get">
-				<input type="submit" name="username" class="sub" value=<%= tempAccount.getUsername() %>> <br/>
-				</form>
-				<%= tempAccount.getDateJoined() %>
-				</div>
-			</td>
-			<td> 
-				<div class="align">
-				<%  java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
-					out.print(formatter.format(posts.get(i).getDateCreated()));
-				%> 
-				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
-					<form action = "EditPostController" method="post">
-						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
-						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
-						<input type="submit" class="sub" name="edit" value="edit"/>
-						<input type="submit" class="sub" name="edit" value="delete">
+	<div id = "content">
+		<table class="demo">
+			<thead>
+			<tr>
+				<th>Account</th>
+				<th>Post</th>
+			</tr>
+			</thead>
+			<tbody>
+			<% 
+				@SuppressWarnings (value="unchecked")
+				HashMap<String, Account> accounts = (HashMap<String, Account>)session.getAttribute("accounts");
+				@SuppressWarnings (value="unchecked")
+				ArrayList<Post> posts = (ArrayList<Post>)session.getAttribute("posts");
+				Account tempAccount;
+			%>
+			<% for(int i = 0; i < posts.size(); i++){ %>
+			<tr>
+				<td>
+					<div class="align">
+					<% tempAccount = accounts.get(posts.get(i).getUsername()); %>
+					<%= tempAccount.getfName() %> <br/>
+					<form action="EditProfileController" method="get">
+					<input type="submit" name="username" class="sub" value=<%= tempAccount.getUsername() %>> <br/>
 					</form>
-				<% } %>
-				<br>
-				<%= posts.get(i).getMessage() %> <br>
-				<br>
-				<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
-				<% out.print(formatter.format(posts.get(i).getDateModified())); %>
-				</div>
-			</td>
-		</tr>
-		<% } %>
-		</tbody>
-	</table>
-</div>
+					<%= tempAccount.getDateJoined() %>
+					</div>
+				</td>
+				<td> 
+					<div class="align">
+					<%  java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
+						out.print(formatter.format(posts.get(i).getDateCreated()));
+					%> 
+					<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
+						<form action = "EditPostController" method="post">
+							<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
+							<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
+							<input type="submit" class="sub" name="edit" value="edit"/>
+							<input type="submit" class="sub" name="edit" value="delete">
+						</form>
+					<% } %>
+					<br>
+					<%= posts.get(i).getMessage() %> <br>
+					<br>
+					<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
+					<% out.print(formatter.format(posts.get(i).getDateModified())); %>
+					</div>
+				</td>
+			</tr>
+			<% } %>
+			</tbody>
+		</table>
+	</div>
 <br><br>
 <div id="footer">
 

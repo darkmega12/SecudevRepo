@@ -3,74 +3,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Post-its here!</title>
+<title>Forums</title>
 <style>
-	.align{
-		text-align: center;
-	}
-	.demo {
-		border:1px solid #C0C0C0;
-		border-collapse:collapse;
-		padding:10px;
-		width: 100%;
-	}
-	.demo th {
-		border:1px solid #C0C0C0;
-		padding:10px;
-		background:#F0F0F0;
-	}
-	.demo td {
-		border:1px solid #C0C0C0;
-		padding:10px;
-	}
-	
-	#content {
-		float: left;
-		width: 80%;
-		
-	}
-	
-	#footer {
-		
-		position: relative;
-		float: left;
-		width: 100%;
-	}
-	
-	#page_footer {
-		font-size: 18px;
-	}
-	
-	.sub { 
-     background: none;
-     border: none;
-     color: #0066ff;
-     text-decoration: underline;
-     cursor: pointer; 
-}
+	body{	
+	    margin-top: 0px;
+	    margin-right: 0px;
+	    margin-left: 0px;
+	    margin-bottom: 0px;
+		}
 </style>
 </head>
 <body>
-
-<% if(session.getAttribute("account") == null) 
-{
-	response.sendRedirect("index.jsp");
-}
-else
-{
-	Account curr = (Account) session.getAttribute("account");
-	boolean isAdmin = curr.isAdmin();
-%>
-
-<h2>Global Posts</h2>
-<h3><a href="HomePage.jsp">Home</a></h3>
+	<div id="nav">
+			<h1>FORUMS</h1>
+			<a href="HomePage.jsp">Home</a>
+			<a href='PostController'>View Forums</a>
+			<a href="Store.jsp">Store</a><br>
+	</div>
+	<% if(session.getAttribute("account") == null) 
+	{
+		response.sendRedirect("index.jsp");
+	}
+	else
+	{
+		Account curr = (Account) session.getAttribute("account");
+		boolean isAdmin = curr.isAdmin();
+	%>
 
 	<div id="search_pane">
 		<form action="SearchController" method="get">
 			<div id="basic_search">
-			Basic Search:
-				<input name="search"/>
+				<input type="text" placeholder="Search..." name="search"/>
 			</div>
 			Advance Search:
 			<div id="advance_search">
