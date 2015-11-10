@@ -116,7 +116,7 @@ public class EditPostController extends HttpServlet {
 					Account currAccount = (Account)request.getSession().getAttribute("account");
 					if(currAccount.isAdmin() || currAccount.getUsername().equals(currEdit.getUsername()))
 					{
-						dbConnection.modifyPost(currEdit.getPostid(), message, true);
+						dbConnection.modifyPost(currEdit.getPostid(), message, null, true);
 						executed = true;
 						session.setAttribute("success", "Post updated successfully");
 					}

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Edit Profile</title>
+    <title>Edit</title>
 	<!--Stylesheets-->
 	<link rel="stylesheet" href="css/jquery-ui.css">
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -164,7 +164,11 @@
         <input type="password" id="password" name="password" class="form-control" value = <%= curr.getPassword() %>>
         
         <% 
-			if(curr.isAdmin()) 
+    	if(session.getAttribute("isAdmin") != null){
+	    	boolean isAdmin = (boolean)session.getAttribute("isAdmin"); 
+	
+	    	
+			if(isAdmin) 
 			{
 				out.println("<label class='control-label' for='AccessControl'>Access Control</label>");
 				out.println("<select id='AccessControl' class='form-control' name='accesscontrollolplsdonthack'>"
@@ -172,6 +176,7 @@
 						+"<option value ='User'>User</option>"
 					+"</select>");
 			}	
+		}
 		%>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>

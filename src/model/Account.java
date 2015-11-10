@@ -13,9 +13,6 @@ public class Account {
 	private String aboutme;
 	private boolean isAdmin;
 	private Date dateJoined;
-	private int totCount;
-	private int totDonate;
-	private int totTrans;
 	
 	public Account(String username, String password, String firstname, String lastname, String gender, String salutation, Date birthday, boolean isAdmin, String aboutme, Date dateJoined){
 		setUsername(username);
@@ -28,9 +25,6 @@ public class Account {
 		setIsAdmin(isAdmin);
 		setAboutme(aboutme);
 		setDateJoined(dateJoined);
-		setTotCount(0);
-		setTotDonate(0);
-		setTotTrans(0);
 	}
 	
 	public String getUsername() {
@@ -105,61 +99,5 @@ public class Account {
 
 	public void setDateJoined(Date dateJoined) {
 		this.dateJoined = dateJoined;
-	}
-
-	public String getTotCount() {
-		if (totCount >= 3)
-			return "Participant Badge";
-		else if (totCount >= 5)
-			return "Chatter Badge";
-		else if (totCount >= 10)
-			return "Socialite Badge";
-		else
-			return null;
-	}
-
-	public void setTotCount(int totCount) {
-		this.totCount = totCount;
-	}
-
-	public String getTotDonate() {
-		if (totDonate >= 5)
-			return "Supporter Badge";
-		else if (totDonate >= 20)
-			return "Contributor Badge";
-		else if (totDonate >= 100)
-			return "Pillar Badge";
-		else
-			return null;
-	}
-
-	public void setTotDonate(int totDonate) {
-		this.totDonate = totDonate;
-	}
-
-	public String getTotTrans() {
-		if (totTrans >= 5)
-			return "Shopper Badge";
-		else if (totTrans >= 20)
-			return "Promoter Badge";
-		else if (totTrans >= 100)
-			return "Elite Badge";
-		else
-			return null;
-	}
-
-	public void setTotTrans(int totTrans) {
-		this.totTrans = totTrans;
-	}
-
-	public String getTotCollection() {
-		if (totCount >= 3 && totDonate >= 5 && totTrans >= 5)
-			return "Shopper Badge";
-		else if (totCount >= 5 && totDonate >= 20 && totTrans >= 20)
-			return "Promoter Badge";
-		else if (totCount >= 10 && totDonate >= 100 && totTrans >= 100)
-			return "Elite Badge";
-		else
-			return null;
 	}
 }

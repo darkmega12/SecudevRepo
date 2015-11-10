@@ -32,16 +32,16 @@
     <servlet-class>controller.PostController</servlet-class>
   </servlet>
   <servlet>
+  	<servlet-name>Images</servlet-name>
+  	<servlet-class>controller.ImageServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>CreatePost</servlet-name>
     <jsp-file>/CreatePost.jsp</jsp-file>
   </servlet>
   <servlet>
     <servlet-name>EditPost</servlet-name>
     <servlet-class>controller.EditPostController</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>Image</servlet-name>
-    <servlet-class>controller.ImageServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
@@ -76,7 +76,7 @@
     <url-pattern>/user/edit/post</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Image</servlet-name>
-    <url-pattern>/images</url-pattern>
+    <servlet-name>Images</servlet-name>
+    <url-pattern>/user/images</url-pattern>
   </servlet-mapping>
 </web-app>

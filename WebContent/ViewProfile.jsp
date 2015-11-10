@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Profile Page</title>
+<title>Insert title here</title>
 </head>
 <body>
 <% 
@@ -17,12 +17,9 @@
 		Account curr = (Account) session.getAttribute("account");
 		Account viewAccount = (Account) session.getAttribute("viewAccount"); 
 		session.setAttribute("isAdmin", curr.isAdmin());
+	
 %>
 <h4> Username: <%= viewAccount.getUsername() %></h4>
-<h5> <%= viewAccount.getTotCount() %></h5>
-<h5> <%= viewAccount.getTotDonate() %></h5>
-<h5> <%= viewAccount.getTotTrans() %></h5>
-<h5> <%= viewAccount.getTotCollection() %></h5>
 <h4> Birthdate: <%
 		java.text.DateFormat formatter = new java.text.SimpleDateFormat("dd/MM/yyyy");
 		out.print(formatter.format(viewAccount.getBirthday()));

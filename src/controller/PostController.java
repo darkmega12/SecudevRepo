@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import model.Post;
  * Servlet implementation class PostController
  */
 @WebServlet("/PostController")
+@MultipartConfig(maxFileSize = 16177215)
 public class PostController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -50,7 +52,6 @@ public class PostController extends HttpServlet {
 			request.getSession().setAttribute("posts", posts);
 			request.getSession().setAttribute("accounts", accounts);
 			request.getSession().setAttribute("total", total);
-			
 		}
 		catch(Exception e)
 		{
@@ -70,26 +71,24 @@ public class PostController extends HttpServlet {
 		try
 		{
 			String message = "";
-			System.out.println(request.getParameter("message"));
+			//String imagepath = "";
 			if(request.getParameter("message") != null)
 			{
 				message = request.getParameter("message");
-				message = validate.sanitizePost(request.getParameter("message"));
 			}
-			else if(message.equals(""))
+			if(message.equals(""))
 			{
 				session.setAttribute("errors", "No message input.");
 				noErrors = false;
 			}
-			/*
 			else
-			{				
+			{
 				message = validate.sanitizePost(request.getParameter("message"));
-				InputStream inputStream = null; // input stream of the upload file
+				  InputStream inputStream = null; // input stream of the upload file
 			         
 			        // obtains the upload file part in this multipart request
-			    Part filePart = request.getPart("attachment");
-			    if (filePart != null) {
+			        Part filePart = request.getPart("attachment");
+			        if (filePart != null) {
 			            // prints out some information for debugging
 			            System.out.println(filePart.getName());
 			            System.out.println(filePart.getSize());
@@ -98,14 +97,13 @@ public class PostController extends HttpServlet {
 			            // obtains input stream of the upload file
 			            inputStream = filePart.getInputStream();
 			        }
-	
+
 				//imagepath = (String)request.getParameter("attachment");
-			}*/
 				Account account = (Account)session.getAttribute("account");
 				DatabaseCon db = new DatabaseCon();
-				//System.out.println("Attachment = "+filePart.getContentType());
-				Post currPost = db.createPost(account.getUsername(), message);
-			
+				System.out.println("Attachment = "+filePart.getContentType());
+				Post currPost = db.createPost(account.getUsername(), message, inputStream,filePart.getContentType());
+			}
 		}
 		catch(Exception e)
 		{
@@ -117,10 +115,6 @@ public class PostController extends HttpServlet {
 		if(session.getAttribute("postnum") == null)
 		{
 			session.setAttribute("postnum", 1);
-		}
-		if(noErrors)
-		{
-			session.setAttribute("success", "Post created successfully.");
 		}
 		response.sendRedirect("CreatePost.jsp");
 	}

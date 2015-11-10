@@ -8,16 +8,22 @@
 </head>
 <style>
 	body{
-		background-color: rgb(149, 165, 166);
+		background-color:white;
 	}
-	#errors{
-		color: red;
-	}
-	#success{
-		color: green;
+	#rcorners2 {
+	    border-radius: 25px;
+	    border: 2px solid #8AC007;
+	    padding: 20px; 
+	    width: 350px;
+	    height: 450px; 
+	 }
+	textarea {
+		width: 330px;
 	}
 </style>
 <body>
+
+<div id=rcorners2>
 	<% if(session.getAttribute("account") == null) 
 	{
 		response.sendRedirect("index.jsp");
@@ -27,10 +33,10 @@
 		Account curr = (Account) session.getAttribute("account");
 	%>
 	
-	<h2> <%= curr.getUsername() %> Post </h2>
+	<h2> <%= curr.getfName() %>, speak up!</h2>
 	
-	<a href="HomePage.jsp">Home</a> <br/> <br>
-	<a href="PostController">View Posts</a>
+	<a href="HomePage.jsp">Home</a>
+	<a href="PostController">View Forums</a>
 	
 	<% if(session.getAttribute("errors") != null) {%>
 		<p id=error> <%= (String)session.getAttribute("errors") %> </p>
@@ -41,18 +47,22 @@
 		<p id=success> <%= (String)session.getAttribute("success") %> </p>
 		<% session.setAttribute("success", null); %>
 	<% } %>
+	
+	<br><br><br><br>
+	<form action="PostController" method="post" enctype="multipart/form-data">
+		<table>
+			<tr><td><textarea name="message" rows="10"></textarea></td></tr>
+			<tr><td>Attach Photo: <input type="file" name="attachment"/></td></tr>
+			<tr><td><input type="submit" value="Post!"/></td></tr>
+		</table>
+	</form>
 	<p> Legend: <br>
 		Bold: Enclose string in [b] and [/b] <br>
 		Italic: Enclose string in [i] and [/i] <br>
 	</p>
-	<form action="PostController" method="post">
-		<table>
-			<tr><td>POST: <textarea name="message" rows="8"></textarea></td></tr>
-			<tr><td>Attachment: <input type="file" name="attachment"/></td></tr>
-			<tr><td><input type="submit" value="Post!"/></td></tr>
-		</table>
-	</form>
+	
 	
 	<% } %>
+</div>
 </body>
 </html>

@@ -12,11 +12,13 @@ public class PostAuthentication {
 		sanitized = sanitized.replace("+", "\\+");
 		sanitized = sanitized.replace("&", "&amp;");
 		sanitized = sanitized.replace("%", "\\%");
+		sanitized = sanitized.replace("<", "&lt;");
+		sanitized = sanitized.replace(">", "&gt;");
 		
-		sanitized = sanitized.replace("<script>", "&lt;script&gt;");
-		sanitized = sanitized.replace("</script>", "&lt;/script&gt;");
-		sanitized = sanitized.replace("onclick=", "onclick&#61;");
-		sanitized = sanitized.replace("onerror=", "onerror&#61;");
+		sanitized = sanitized.replace("[b]", "<b>");
+		sanitized = sanitized.replace("[/b]", "</b>");
+		sanitized = sanitized.replace("[i]", "<i>");
+		sanitized = sanitized.replace("[/i]", "</i>");
 		
 		System.out.println("result of sanitazing "+sanitized);
 		return sanitized;

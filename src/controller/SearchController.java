@@ -47,6 +47,7 @@ public class SearchController extends HttpServlet {
 			}
 			DatabaseCon db = new DatabaseCon();
 			accounts = db.getUsers();
+			System.out.println((String)request.getParameter("searchType"));
 			if(request.getParameter("searchType") != null && request.getParameter("searchType").equals("basic"))
 			{
 				String value;

@@ -36,16 +36,16 @@ public class ExportController extends HttpServlet {
     }
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Backing up...");
+		System.out.println("Backing up");
 		DatabaseCon dbConnection = new DatabaseCon();
 		
-		if (dbConnection.exportCSV() == true) {
+		if (dbConnection.exportCSV() == true)
 			System.out.println("Backup Successful");
-			response.sendRedirect("BackupSuccess.jsp");
-		} else { 
+		else
 			System.out.println("Backup Unsuccessful");
-			response.sendRedirect("BackupFailed.jsp");
-		}
+		
+
+		System.out.println("HeyDay");
 	}
 
 }

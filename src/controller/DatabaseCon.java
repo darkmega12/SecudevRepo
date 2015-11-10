@@ -53,16 +53,17 @@ public class DatabaseCon {
 	{
 		try{
 			//For deployed Connection to deployed database
+			/*
 			InitialContext context = new InitialContext();
 			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
 			dbConnection = ds.getConnection(user, password);
-			
+			*/
 			
 			/* * For tomcat connection to deployed database * */
-			//Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 			//String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
 			//dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			//dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
+			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
 		} catch(Exception e)
 		{
 			System.out.println("weeee");
@@ -400,45 +401,40 @@ public class DatabaseCon {
 		return tempPost;
 	}
 	
-	public Post createPost(String username, String message)
+	public Post createPost(String username, String message, InputStream attachment, String imagename)
 	{
 		tempPost = null;
 		open();
 		try{
-			String postQuery = "insert into posts (username, message, datecreated, datemodified) values (?,?,?,?)";
+			
+			String postQuery = "insert into posts (username, message, attachment, datecreated, datemodified, imagename) values (?,?,?,?,?,?)";
 			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
 			
 			java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 			
 			createPost.setString(1, username);
 			createPost.setString(2, message);
-	        /*
-			if (attachment != null) {
+	        if (attachment != null) {
                 // fetches input stream of the upload file for the blob column
                 createPost.setBlob(3, attachment);
                 System.out.println("Printed Blob Success!");
-            }*/
-			createPost.setDate(3, dateToday);
+            }
 			createPost.setDate(4, dateToday);
-//			createPost.setString(6, imagename);
+			createPost.setDate(5, dateToday);
+			createPost.setString(6, imagename);
 			createPost.executeUpdate();
 			
-			dbConnection.close();
 			tempPost = getLast();
 		} catch(Exception e)
 		{
 			System.out.println(e);
-		} finally 
-		{
+		} finally {
 			close();
 		}
-
-		updateUserPosts(username);
-
 		return tempPost;
 	}
 	
-	public void modifyPost(int postid, String message, boolean isEdit)
+	public void modifyPost(int postid, String message, InputStream attachment, boolean isEdit)
 	{
 		open();
 		try
@@ -447,7 +443,7 @@ public class DatabaseCon {
 			String query;
 			if(isEdit)
 			{
-				query = "update posts set message = ?, datemodified = ? where postid = ?";
+				query = "update posts set message = ?, attachment = ?, datemodified = ? where post_id = ?";
 			}
 			else
 			{
@@ -460,8 +456,12 @@ public class DatabaseCon {
 			{
 				java.sql.Date dateToday = new java.sql.Date(new java.util.Date().getTime());
 				modifyPost.setString(1, message);
-				modifyPost.setDate(2, dateToday);
-				modifyPost.setInt(3, postid);
+		                // fetches input stream of the upload file for the blob column
+		                modifyPost.setBlob(2, attachment);
+		                System.out.println("Printed Blob Success!");
+
+				modifyPost.setDate(3, dateToday);
+				modifyPost.setInt(4, postid);
 			}
 			else
 			{
@@ -469,6 +469,7 @@ public class DatabaseCon {
 			}
 			
 			modifyPost.executeUpdate();
+			dbConnection.close();
 		}
 		catch(Exception e)
 		{
@@ -479,7 +480,7 @@ public class DatabaseCon {
 			close();
 		}
 	}
-	
+
 	public int numPosts()
 	{
 		int numPost = 0;
@@ -571,7 +572,7 @@ public class DatabaseCon {
 		{
 			String editValue= "%"+value+"%";
 			PreparedStatement basicSearch;
-			String query = "Select * from posts where message like ?";
+			String query = "Select * from posts where message like ? deleted = 0";
 			basicSearch = dbConnection.prepareStatement(query);
 			basicSearch.setString(1, editValue);
 			ResultSet rs = basicSearch.executeQuery();

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.util.ArrayList,model.Account"%>
+    pageEncoding="ISO-8859-1" import="java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
   <head>
@@ -142,10 +142,9 @@
         <input type="password" id="password" name="password" class="form-control" >
         
         <% 
-    	if(session.getAttribute("account") != null){
-    		Account curr = (Account)session.getAttribute("account");
-	    	boolean isAdmin = curr.isAdmin(); 
-		
+    	if(session.getAttribute("isAdmin") != null){
+	    	boolean isAdmin = (boolean)session.getAttribute("isAdmin"); 
+	
 	    	
 			if(isAdmin) 
 			{
@@ -155,18 +154,13 @@
 						+"<option value ='User'>User</option>"
 					+"</select>");
 			}	
-		
+		}
 		%>
-		<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        <a href="/HomePage" class="btn btn-lg btn-primary btn-block">Home</a>
+        
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
       </form>
-      <%
-    	}
-    	else {
-      %>
-     	<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-      </form>
-      <% } %>
+
     </div>
+	
   </body>
 </html>

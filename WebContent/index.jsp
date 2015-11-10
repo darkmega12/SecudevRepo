@@ -36,8 +36,11 @@
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name = "password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      	<a class="btn btn-lg btn-primary btn-block" href="Register.jsp">Register</a>
       </form>
+      <form action="RegisterController" method="get">
+        <button type="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+      </form>
+      <b>
     </div>
 </body>
 </html>

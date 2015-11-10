@@ -61,7 +61,7 @@ public class DeletePostController extends HttpServlet {
 					{
 						if(dbConnection.authenticatePost(post_id, (String)request.getAttribute("username"))) //checks if the right username is with the right post
 						{
-							dbConnection.modifyPost(post_id, "", false);
+							dbConnection.modifyPost(post_id, "",null, false);
 							executed = true;
 						}
 					}
