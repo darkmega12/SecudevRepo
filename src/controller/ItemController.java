@@ -49,6 +49,7 @@ public class ItemController extends HttpServlet {
 			ArrayList<Item> items = db.getItems();
 			HashMap<String, Account> accounts = db.getUsers();
 			request.getSession().setAttribute("items", items);
+			System.out.println("HELOOOOOOOOOOOOO!");
 			request.getSession().setAttribute("accounts", accounts);
 		}
 		catch(Exception e)

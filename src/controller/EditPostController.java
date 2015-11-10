@@ -7,15 +7,17 @@ package controller;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import authentication.PostAuthentication;
 import model.Account;
@@ -24,6 +26,7 @@ import model.Post;
  * Servlet to handle edit/delete post requests
  */
 @WebServlet("/EditPostController")
+@MultipartConfig(maxFileSize = 16177215)
 public class EditPostController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,57 +43,9 @@ public class EditPostController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		DatabaseCon dbConnection = new DatabaseCon();
-		HttpSession session = request.getSession();
-		boolean executed = false; //flag for if the changes were executed or not
-		try
-		{
-			if(request.getParameter("username") != null && request.getParameter("post_id") != null)
-			{
-				String username = (String) request.getParameter("username");
-				Post post = null;
-				System.out.println("aw");
-				@SuppressWarnings("unchecked")
-				ArrayList<Post> posts = (ArrayList<Post>)session.getAttribute("posts");
-				int post_id = Integer.parseInt(request.getParameter("post_id"));
-				Account currAccount = (Account)request.getSession().getAttribute("account");
-				System.out.println("aw");
-				for(Post i:posts)
-				{
-					if(i.getPostid() == post_id)
-					{
-						post = i;
-						break;
-					}
-				}
-				System.out.println(post.getUsername());
-				if(post != null)
-				{
-					if(post.getUsername().equals(username))
-					{
-						if(currAccount.isAdmin() || currAccount.getUsername().equals(username))
-						{
-							if(dbConnection.authenticatePost(post_id, username)) //checks if the right username is with the right post
-							{
-								session.setAttribute("currEdit", post);
-								executed = true;
-							}
-						}
-					}
-				}
-			} 
-		}catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		if(executed)
-		{
-			response.sendRedirect("EditPost.jsp");
-		}
-		else
-		{
-			response.sendRedirect("GlobalPost.jsp");
-		}
+
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -100,43 +55,97 @@ public class EditPostController extends HttpServlet {
 		// TODO Auto-generated method stub
 		DatabaseCon dbConnection = new DatabaseCon();
 		HttpSession session = request.getSession();
-		PostAuthentication authenticate = new PostAuthentication();
+		PostAuthentication validate = new PostAuthentication();
 		boolean executed = false; //flag for if the changes were executed or not
 		try
 		{
-			Post currEdit;
-			String message = "";
-			if(session.getAttribute("currEdit") != null && session.getAttribute("message") != null)
+			String action = request.getParameter("edit");
+			System.out.println("action:"+action);
+			DatabaseCon db = new DatabaseCon();
+			if(action != null)
 			{
-				message = (String)session.getAttribute("message");
-				if(!message.equals(""))
+			int post_id = Integer.parseInt(request.getParameter("post_id"));
+			String username = request.getParameter("username");
+			
+			Account currAccount = (Account)request.getSession().getAttribute("account");
+			if(currAccount.isAdmin() || currAccount.getUsername().equals(request.getAttribute("username")))
+			{
+				if(dbConnection.authenticatePost(post_id, username)) //checks if the right username is with the right post
 				{
-					currEdit = (Post)session.getAttribute("currEdit");
-					message = authenticate.sanitizePost(message);
-					Account currAccount = (Account)request.getSession().getAttribute("account");
-					if(currAccount.isAdmin() || currAccount.getUsername().equals(currEdit.getUsername()))
-					{
-						dbConnection.modifyPost(currEdit.getPostid(), message, null, true);
-						executed = true;
-						session.setAttribute("success", "Post updated successfully");
-					}
-				}
-				else
-				{
-					session.setAttribute("errors", "NO message input");
+				
+					
+						if(action.equals("delete"))
+						{
+							
+							int total = db.numPosts();
+							int page_num = 1;
+							System.out.println("I deleted!");
+							dbConnection.modifyPost(post_id, "", null, false);
+							ArrayList<Post> posts = db.getGlobalPosts(page_num);
+							
+							request.getSession().setAttribute("posts", posts);
+							request.getSession().setAttribute("total", total);
+							
+							executed = true;
+						}
+						else if(action.equals("edit"))
+						{
+							System.out.println("Edits");
+							Post p = db.getPost(post_id);
+							request.getSession().setAttribute("editid", post_id);
+							request.getSession().setAttribute("editpost",p);
+						}
+						else if(action.equals("editpost"))
+						{
+							String message = "";
+							//String imagepath = "";
+							if(request.getParameter("message") != null)
+							{
+								message = request.getParameter("message");
+							}
+							System.out.println("Message:" +message);
+							int total = db.numPosts();
+							int page_num = 1;
+							message = validate.sanitizePost(message);
+							System.out.println("I Edited!");
+							Part filePart = request.getPart("attachment");
+							System.out.println("I Edited!");
+							InputStream inputStream = null;
+							if(filePart != null)
+							{
+								inputStream = filePart.getInputStream();
+							}
+							int yo = (Integer)request.getSession().getAttribute("editid");
+							System.out.println(yo);
+							System.out.println("I Edited!");
+							
+						
+							dbConnection.modifyPost(yo , message, inputStream, true);
+							System.out.println("I Edited!");
+							ArrayList<Post> posts = db.getGlobalPosts(page_num);
+							
+							request.getSession().setAttribute("posts", posts);
+							request.getSession().setAttribute("total", total);
+							
+							executed = true;
+						}
+					
+					
+					
 				}
 			}
+			}
+			
 		} catch(Exception e)
 		{
 			System.out.println(e);
 		}
-		if(executed)
-		{
-			response.sendRedirect("GlobalPost.jsp");
-		}
-		else
+		if(!executed)
 		{
 			response.sendRedirect("EditPost.jsp");
 		}
+		else
+			response.sendRedirect("GlobalPost.jsp");
 	}
+
 }

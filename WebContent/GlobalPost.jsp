@@ -21,7 +21,7 @@
 			<h1>FORUMS</h1>
 			<a href="HomePage.jsp">Home</a>
 			<a href='PostController'>View Forums</a>
-			<a href="Store.jsp">Store</a><br>
+			<a href="ItemController">Store</a><br>
 	</div>
 	<% if(session.getAttribute("account") == null) 
 	{

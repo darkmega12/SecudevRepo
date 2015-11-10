@@ -268,12 +268,17 @@ public class DatabaseCon {
 		}
 		return tempAccount;
 	}
-	/*Item*/
+	/******
+	 * 
+	 * ITEM
+	 * 
+	 ******/
 	
 	public void createItem(Item n)
 	{
 		open();
-		try{
+		try
+		{
 			String postQuery = "insert into items (itemid, itemname, itemdescription, itemprice, itemimage, imagetype) values (?,?,?,?,?,?)";
 			PreparedStatement createPost = dbConnection.prepareStatement(postQuery);
 			
@@ -286,12 +291,10 @@ public class DatabaseCon {
 
 			createPost.executeUpdate();
 			
+			dbConnection.close();
 		} catch(Exception e)
 		{
 			System.out.println(e);
-		} finally
-		{
-			close();
 		}
 	}
 	public int getLastItemId()
@@ -308,7 +311,7 @@ public class DatabaseCon {
 			
 		} catch(Exception e)
 		{
-			System.out.println(e);
+			
 		}
 		finally
 		{
@@ -346,6 +349,7 @@ public class DatabaseCon {
 		}
 		return postList;
 	}
+	
 	/*******************
 	 * 
 	 * 		POST
@@ -377,7 +381,28 @@ public class DatabaseCon {
 		}
 		return isLegit;
 	}
-	
+
+	public Post getPost(int post_id)
+	{
+		open();
+		try
+		{
+			String query = "Select * from posts where post_id = ?";
+			PreparedStatement authenticatePost = dbConnection.prepareStatement(query);
+			authenticatePost.setInt(1, post_id);
+			ResultSet rs = authenticatePost.executeQuery();
+			rs.next();
+			
+			Post tempPost = new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6));
+			return tempPost;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;
+	}
+		
 	public Post getLast()
 	{
 		tempPost = null;
