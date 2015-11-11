@@ -49,7 +49,7 @@
 	
 	<a href='EditProfile.jsp'>Edit Profile </a><br/>
 	<a href='CreatePost.jsp'>Post Message</a><br/></br>
-	<a href='Store.jsp'>The Store</a><br>
+	<a href='ItemController'>The Store</a><br>
 	<a href='PostController'>View Forums</a><br>
 	<% if(curr.isAdmin()) { %>
 	<a href='Backup.jsp'>Create Backup</a></br>
