@@ -21,7 +21,7 @@
 			<h1>THE STORE</h1>
 			<a href="HomePage.jsp">Home</a>
 			<a href='PostController'>View Forums</a>
-			<a href="Store.jsp">Store</a><br>
+			<a href="ItemController">Store</a><br>
 	</div>
 	<% if(session.getAttribute("account") == null) 
 		{
@@ -72,40 +72,42 @@
 				          <label>Item Price: </label><input type="text" name="itemprice" placeholder = "Item Price"><br><br>
 				          <label>Item Description: </label> <br><textarea rows="1" cols="1" name="itemdesc"></textarea><br><br>
 				           Photo:<input type="file" name="attachment"><br><br>
-				           <input type="submit" name="itemsel" value="Add">&nbsp&nbsp
+				           <input type="submit" name="itemsel" value="Add">
 		           </form><br><button onclick="overlay()">Close</button>
 		     </div>
 		</div>
 						
 		<div class = "container">
+<%-- 			<%=session.getAttribute("items") %> <% } %> --%>
 			<div class="shop">
-<%-- 			<% --%>
-<!-- 			ArrayList<Item> it = (ArrayList<Item>)session.getAttribute("items"); -->
+			<%
+			
+			ArrayList<Item> it = (ArrayList<Item>)session.getAttribute("items");
 			  
-<!--  			for(int i = 0; i < it.size(); i++)  -->
-<!--  			{ -->
-<%-- 			%> --%>
-<!-- 				<div class="item"> -->
-<%-- 					<h2 class="item_name"><%=it.get(i).getName() %></h2> --%>
-<%-- 					<img class="item_img" src="/TestSecuProj/images2?id=<%= it.get(i).getId()%>"> --%>
-<%-- 					<p class="description"><%= it.get(i).getDescription() %></p> --%>
-<%-- 					<h2 class="item_price">PHP <%= it.get(i).getPrice() %></h2> --%>
-<!-- 							<div style="padding-left:20px;"> -->
-<!-- 	<!-- 					<form target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post"> --> 
-<!-- 	<!-- 						<input type="hidden" name="cmd" value="_s-xclick"> --> 
-<!-- 	<!-- 						<input type="hidden" name="hosted_button_id" value="ZC36GNY68ZCHE"> --> 
-<!-- 	<!-- 						<input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"> -->
-<!-- 	<!-- 						<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"> --> 
-<!-- 	<!-- 					</form> --> 
+		for(int i = 0; i < it.size(); i++)   
+		{ 
+		%>  
+				<div class="item">
+					<h2 class="item_name"><%=it.get(i).getName() %></h2>
+					<img class="item_img" src="/TestSecuProj/images2?id=<%= it.get(i).getId()%>">
+					<p class="description"><%= it.get(i).getDescription() %></p>
+					<h2 class="item_price">PHP <%= it.get(i).getPrice() %></h2>
+							<div style="padding-left:20px;">
+	<!-- 					<form target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post"> 
+	<!-- 						<input type="hidden" name="cmd" value="_s-xclick"> 
+	<!-- 						<input type="hidden" name="hosted_button_id" value="ZC36GNY68ZCHE"> 
+	<!-- 						<input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+	<!-- 						<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"> 
+					</form> -->
 	
 				           <%if(isAdmin) {%>....Admin Only:<form action="ItemController" method="post"><input type="hidden" name="itemid" value="n" /> <input type="submit" name="itemsel" value="Edit"/><input type="submit" name="itemsel" value="Remove"/></form>
 				           <%}%>
 			
 						<button class="btn">ADD TO CART</button>
-<!-- 					</div> -->
-<!-- 				</div> -->
+ 					</div> 
+				</div> 
 
-	<%}%>
+	<%}}%>
 			</div>
 		</div>
 
