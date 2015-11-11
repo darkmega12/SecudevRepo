@@ -38,6 +38,11 @@ public class DatabaseCon {
 	private String user; //PC user?
 	private String password; //PC password?
 	
+	private Date dateJoined;
+	private int totCount;
+	private int totDonate;
+	private int totTrans;
+	
 	public DatabaseCon()
 	{
 		this.user = "b1de8e11f2b535";
@@ -926,6 +931,18 @@ public class DatabaseCon {
 		{
 			close();
 		}
+	}
+
+	public String getTotCount() {
+		
+		if (totCount >= 3)
+			return "Participant Badge";
+		else if (totCount >= 5)
+			return "Participant Badge - Chatter Badge";
+		else if (totCount >= 10)
+			return "Participant Badge - Chatter Badge - Socialite Badge";
+		else
+			return null;
 	}
 
 	public int countUserPosts(String username) 

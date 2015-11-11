@@ -45,7 +45,6 @@ public class LoginController extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		Account currAccount = db.authenticate(username, password);
-		
 		if(currAccount == null)
 		{
 			response.sendRedirect("index.jsp");

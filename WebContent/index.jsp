@@ -24,7 +24,7 @@
 <body>
 <% if(session.getAttribute("account") != null)
 	{
-		response.sendRedirect("HomePage.jsp");
+// 		response.sendRedirect("HomePage.jsp");
 	}
 %>
     <div class="container">

@@ -19,7 +19,7 @@
 		if(curr.isAdmin())
 		{
 	%>
-	<div id=rcorners2>
+	<div id="rcorners2">
 		<h4> Welcome, <%= curr.getSalutation() %> <%= curr.getfName()%> <%= curr.getlName() %> </h4>
 		<hr><br>
 		<a href="HomePage.jsp">Home</a>
