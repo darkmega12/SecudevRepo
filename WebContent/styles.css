@@ -100,10 +100,11 @@
 		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 	}
 	.item img{
-		width:300px;
-		height:300px;
+		width: 200px;
+		height: 200px;
 		display:inline;
 		float:right;
+		margin: 40px;
 	}
 	.item h2, .item h1{
 	margin-top:30px;
@@ -231,11 +232,6 @@
 	}
 	#footer{
 		margin-left:40px;
-	}
-	
-	.item_img{
-		width:200px;
-		height:200px;
 	}
 	
 </style>

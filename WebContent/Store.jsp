@@ -100,10 +100,14 @@
 	<!-- 						<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"> 
 					</form> -->
 	
-				           <%if(isAdmin) {%>....Admin Only:<form action="ItemController" method="post"><input type="hidden" name="itemid" value="n" /> <input type="submit" name="itemsel" value="Edit"/><input type="submit" name="itemsel" value="Remove"/></form>
+				           <%if(isAdmin) {%>
+				           <form action="ItemController" method="post"><input type="hidden" name="itemid" value="n" /> 
+				           	<input type="submit" name="itemsel" value="Edit"/><input type="submit" name="itemsel" value="Remove"/>
+				           	</form>
 				           <%}%>
 			
 						<button class="btn">ADD TO CART</button>
+						<hr>
  					</div> 
 				</div> 
 
