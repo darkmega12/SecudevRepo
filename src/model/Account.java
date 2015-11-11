@@ -138,7 +138,7 @@ public class Account {
 		else if (totDonate >= 100)
 			return "Supporter Badge - Contributor Badge - Pillar Badge";
 		else
-			return null;
+			return "";
 	}
 
 	public void setTotDonate(int totDonate) {
@@ -153,7 +153,7 @@ public class Account {
 		else if (totTrans >= 100)
 			return "Shopper Badge - Promoter Badge - Elite Badge";
 		else
-			return null;
+			return "";
 	}
 
 	public void setTotTrans(int totTrans) {
@@ -168,6 +168,6 @@ public class Account {
 		else if (totCount >= 10 && totDonate >= 100 && totTrans >= 100)
 			return "Explorer Badge - Backer Badge - Evangelist Badge";
 		else
-			return null;
+			return "";
 	}
 }
