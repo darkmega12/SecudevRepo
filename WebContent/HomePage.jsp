@@ -38,11 +38,10 @@
 		(curr.getDateJoined().getYear()+1900) %> </p>
 	<p> About Me: <%= curr.getAboutme() %> </p>
 	
-	BADGES:
-	<h5> totCount: <%= curr.getTotCount() %></h5>
-	<h5> totDonate: <%= curr.getTotDonate() %></h5>
-	<h5> totTrans: <%= curr.getTotTrans() %></h5>
-	<h5> totCollection: <%= curr.getTotCollection() %></h5>
+	<h5><%= curr.getTotCount() %></h5>
+	<h5><%= curr.getTotDonate() %></h5>
+	<h5><%= curr.getTotTrans() %></h5>
+	<h5><%= curr.getTotCollection() %></h5>
 	
 	<p> Gender: <%=curr.getGender() %></p>
 

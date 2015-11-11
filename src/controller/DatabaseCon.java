@@ -47,6 +47,7 @@ public class DatabaseCon {
 	{
 		this.user = "b1de8e11f2b535";
 		this.password = "2c77e8b1";
+
 	}
 	
 	public Connection getConnection()
@@ -58,20 +59,19 @@ public class DatabaseCon {
 	{
 		try{
 			//For deployed Connection to deployed database
-			/*
-			InitialContext context = new InitialContext();
-			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
-			dbConnection = ds.getConnection(user, password);
-			*/
+			
+//			InitialContext context = new InitialContext();
+//			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
+//			dbConnection = ds.getConnection(user, password);
+			
 			
 			/* * For tomcat connection to deployed database * */
 			Class.forName("com.mysql.jdbc.Driver");
-			//String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
-			//dbConnection = DriverManager.getConnection(url, this.user, this.password);
+			String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
+			dbConnection = DriverManager.getConnection(url, this.user, this.password);
 			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
 		} catch(Exception e)
 		{
-			System.out.println("weeee");
 			System.out.println(e);
 		}
 	}

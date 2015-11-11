@@ -38,11 +38,10 @@
 		(viewaccount.getDateJoined().getYear()+1900) %> </p>
 	<p> About Me: <%= viewaccount.getAboutme() %> </p>
 	
-	BADGES:
-	<h5> <%= viewaccount.getTotCount() %></h5>
-	<h5> <%= viewaccount.getTotDonate() %></h5>
-	<h5> <%= viewaccount.getTotTrans() %></h5>
-	<h5> <%= viewaccount.getTotCollection() %></h5>
+	<h5><%= viewaccount.getTotCount() %></h5>
+	<h5><%= viewaccount.getTotDonate() %></h5>
+	<h5><%= viewaccount.getTotTrans() %></h5>
+	<h5><%= viewaccount.getTotCollection() %></h5>
 	
 	<p> Gender: <%=viewaccount.getGender() %></p>
 
