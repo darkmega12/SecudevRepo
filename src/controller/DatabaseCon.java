@@ -97,7 +97,7 @@ public class DatabaseCon {
 			ResultSet set = getUser.executeQuery();
 			while(set.next())
 			{
-				tempAccount = new Account(set.getString(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getString(6), set.getDate(7), set.getBoolean(8), set.getString(9), set.getDate(10));
+				tempAccount = new Account(set.getString(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getString(6), set.getDate(7), set.getBoolean(8), set.getString(9), set.getDate(10), set.getInt(11), set.getInt(12), set.getInt(13));
 			}
 		} catch(Exception e)
 		{
@@ -120,7 +120,7 @@ public class DatabaseCon {
 			ResultSet set = statement.executeQuery(dbQuery);
 			while(set.next())
 			{
-				results.put(set.getString(1), new Account(set.getString(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getString(6), set.getDate(7), set.getBoolean(8), set.getString(9), set.getDate(10)));
+				results.put(set.getString(1), new Account(set.getString(1), set.getString(2), set.getString(3), set.getString(4), set.getString(5), set.getString(6), set.getDate(7), set.getBoolean(8), set.getString(9), set.getDate(10), set.getInt(11), set.getInt(12), set.getInt(13)));
 			}
 		}
 		catch(Exception e)
@@ -133,7 +133,7 @@ public class DatabaseCon {
 		}
 		return results;
 	}
-	public Account register(String username, String password, String firstname, String lastname, String gender, String salutation, Date birthdate, boolean isAdmin, String aboutme)
+	public Account register(String username, String password, String firstname, String lastname, String gender, String salutation, Date birthdate, boolean isAdmin, String aboutme, int totCount, int totDonate, int totTrans)
 	{
 		tempAccount = null;
 		//convert java date to sql date
@@ -145,7 +145,7 @@ public class DatabaseCon {
 			try{			
 				String registerQuery = "insert into accounts (username, password, firstname, lastname,"
 									 + " gender, salutation, birthdate, isadmin, aboutme, datejoined) values "
-									 + "(?, ? , ?, ?, ?, ? , ?, ?, ?, ?)";
+									 + "(?, ? , ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
 				
 				PreparedStatement registerAccount = dbConnection.prepareStatement(registerQuery);
 				
@@ -158,10 +158,13 @@ public class DatabaseCon {
 				registerAccount.setDate(7, sqldate);
 				registerAccount.setInt(8, (isAdmin) ? 1 : 0);
 				registerAccount.setString(9, aboutme);
-				registerAccount.setDate(10, dateJoined);
+				registerAccount.setDate(10, dateJoined);				
+				registerAccount.setInt(11, totCount);
+				registerAccount.setInt(12, totDonate);
+				registerAccount.setInt(13, totTrans);
 				registerAccount.executeUpdate();
 			
-			tempAccount = new Account(username, password, firstname, lastname, gender, salutation, birthdate, isAdmin, aboutme, dateJoined);
+			tempAccount = new Account(username, password, firstname, lastname, gender, salutation, birthdate, isAdmin, aboutme, dateJoined, totCount, totDonate, totTrans);
 			}
 			catch(Exception e)
 			{
@@ -260,7 +263,7 @@ public class DatabaseCon {
 			ResultSet set = getAccount.executeQuery();
 			while(set.next())
 			{
-				tempAccount = new Account(set.getString("username"), set.getString("password"), set.getString("firstname"), set.getString("lastname"), set.getString("gender"), set.getString("salutation"), set.getTimestamp("birthdate"), set.getBoolean("isadmin"), set.getString("aboutme"), set.getTimestamp("datejoined"));
+				tempAccount = new Account(set.getString("username"), set.getString("password"), set.getString("firstname"), set.getString("lastname"), set.getString("gender"), set.getString("salutation"), set.getTimestamp("birthdate"), set.getBoolean("isadmin"), set.getString("aboutme"), set.getTimestamp("datejoined"), set.getInt("totCount"), set.getInt("totDonate"), set.getInt("totTrans"));
 			}
 		}
 		catch(Exception e)
@@ -455,6 +458,8 @@ public class DatabaseCon {
 			createPost.executeUpdate();
 			
 			tempPost = getLast();
+			
+			updateUserPosts(username);
 		} catch(Exception e)
 		{
 			System.out.println(e);
@@ -477,7 +482,7 @@ public class DatabaseCon {
 			}
 			else
 			{
-				query = "update posts set deleted = true where post_id = ?";
+				query = "update posts set deleted = false where post_id = ?";
 			}
 			
 			modifyPost = dbConnection.prepareStatement(query);

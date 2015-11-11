@@ -132,7 +132,7 @@ public class RegisterController extends HttpServlet {
 				Calendar cal = Calendar.getInstance();
 				cal.set(birthdate.getYear(), birthdate.getMonthValue() - 1, birthdate.getDayOfMonth());
 				Date bday = cal.getTime();
-				Account currAccount = db.register(username, password, firstname, lastname, gender, salutation, bday, isAdmin, aboutme);
+				Account currAccount = db.register(username, password, firstname, lastname, gender, salutation, bday, isAdmin, aboutme, 0, 0, 0);
 			
 				if(currAccount != null)
 				{

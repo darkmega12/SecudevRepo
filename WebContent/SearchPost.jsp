@@ -56,10 +56,11 @@
 			
 			<div class="search_preferences">
 				<b>Date Format: YYYY-MM-DD</b><br>
-				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
-				Advanced<input type="radio" name="searchType" value="advanced"/>
+				Type of Search: <input type="radio" name="searchType" value="basic" checked/> Basic
+				<input type="radio" name="searchType" value="advanced"/> Advanced
+				</br></br>
 				<input type="submit" value="Search"/>
-			</div>	
+			</div>
 		</form>
 	</div>
 	<br/>

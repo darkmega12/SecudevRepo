@@ -16,10 +16,8 @@ public class Account {
 	private int totCount;
 	private int totDonate;
 	private int totTrans;
-
-	public Account(String username, String password, String firstname,
-			String lastname, String gender, String salutation, Date birthday,
-			boolean isAdmin, String aboutme, Date dateJoined) {
+	
+	public Account(String username, String password, String firstname, String lastname, String gender, String salutation, Date birthday, boolean isAdmin, String aboutme, Date dateJoined, int totCount, int totDonate, int totTrans){
 		setUsername(username);
 		setPassword(password);
 		setfName(firstname);
@@ -30,35 +28,29 @@ public class Account {
 		setIsAdmin(isAdmin);
 		setAboutme(aboutme);
 		setDateJoined(dateJoined);
-		setTotCount(0);
-		setTotDonate(0);
-		setTotTrans(0);
+		setTotCount(totCount);
+		setTotDonate(totDonate);
+		setTotTrans(totTrans);
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	public String getfName() {
 		return fName;
 	}
-
 	public void setfName(String fName) {
 		this.fName = fName;
 	}
-
 	public String getlName() {
 		return lName;
 	}
@@ -123,7 +115,7 @@ public class Account {
 		else if (totCount >= 10)
 			return "Participant Badge - Chatter Badge - Socialite Badge";
 		else
-			return null;
+			return "";
 	}
 
 	public void setTotCount(int totCount) {
