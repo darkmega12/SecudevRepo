@@ -37,55 +37,29 @@
 			<div id="basic_search">
 				<input type="text" placeholder="Search..." name="search"/>
 			</div>
-			Advance Search:
 			<div id="advance_search">
-				<div id="search_adv1">
-					<input name="search1" /> 
-					<select name="searchtype1">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-					<select name="logicgate1">
-						<option value="N/A">N/A</option>
-						<option value="OR">OR</option>
-						<option value="AND">AND</option>
-					</select>
-				</div>
-				<div id="search_adv2">
-					<input name="search2" /> 
-					<select name="searchtype2">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-					<select name="logicgate2">
-						<option value="N/A">N/A</option>
-						<option value="OR">OR</option>
-						<option value="AND">AND</option>
-					</select>
-				</div>
-				<div id="search_adv3">
-					<input name="search3" /> 
-					<select name="searchtype3">
-						<option value="username">name</option>
-						<option value="message">post</option>
-						<option value="before date">before date</option>
-						<option value="after date">after date</option>
-						<option value="during date">during date</option>
-					</select>
-				</div>
+				Advance Search:
+					<div class="input_fields_wrap">
+					    <button class="add_field_button">Add Criteria</button>
+					    <div>
+						    <input type="text" name="mytext[]">
+						    <select name="searchtype1">
+							    <option value="username">Username</option>
+								<option value="message">Post</option>
+								<option value="before date">Before Date</option>
+								<option value="after date">After Date</option>
+								<option value="during date">On Date</option>
+						    </select>
+					    </div>
+					</div>
 			</div>
-			<div>
+			
+			<div class="search_preferences">
 				<b>Date Format: YYYY-MM-DD</b><br>
 				Type of Search: Basic<input type="radio" name="searchType" value="basic" checked/>
 				Advanced<input type="radio" name="searchType" value="advanced"/>
 				<input type="submit" value="Search"/>
-			</div>
+			</div>	
 		</form>
 	</div>
 	<br/>
