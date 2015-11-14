@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import authentication.ItemAuthentication;
 import authentication.PostAuthentication;
 import model.Account;
 import model.Post;
@@ -68,8 +69,10 @@ public class PostController extends HttpServlet {
 		HttpSession session = request.getSession();
 		boolean noErrors = true;
 		PostAuthentication validate = new PostAuthentication();
+		ItemAuthentication authenticate = new ItemAuthentication();
 		try
 		{
+			String itemname = (String)request.getSession().getAttribute("itemName");
 			String message = "";
 			//String imagepath = "";
 			if(request.getParameter("message") != null)
@@ -84,7 +87,8 @@ public class PostController extends HttpServlet {
 			else
 			{
 				message = validate.sanitizePost(request.getParameter("message"));
-				  InputStream inputStream = null; // input stream of the upload file
+				message = authenticate.provideItemLink(message, itemname);  
+				InputStream inputStream = null; // input stream of the upload file
 			         
 			        // obtains the upload file part in this multipart request
 			        Part filePart = request.getPart("attachment");

@@ -165,7 +165,7 @@
         
         <% 
     	if(session.getAttribute("isAdmin") != null){
-	    	boolean isAdmin = (boolean)session.getAttribute("isAdmin"); 
+	    	Boolean isAdmin = (Boolean)session.getAttribute("isAdmin"); 
 	
 	    	
 			if(isAdmin) 

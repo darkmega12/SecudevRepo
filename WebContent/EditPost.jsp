@@ -63,6 +63,7 @@
 	<p> Legend: <br>
 		Bold: Enclose string in [b] and [/b] <br>
 		Italic: Enclose string in [i] and [/i] <br>
+		Item Link: @itemname@ <br>
 	</p>
 	
 	

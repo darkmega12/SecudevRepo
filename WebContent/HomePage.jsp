@@ -52,6 +52,7 @@
 	<a href='PostController'>View Forums</a><br>
 	<% if(curr.isAdmin()) { %>
 	<a href='Backup.jsp'>Create Backup</a></br>
+	<a href='ManagementConsole.jsp'>Management Console</a></br>
 	<% } %>
 	<% if(curr.isAdmin()) 
 		{

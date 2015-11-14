@@ -42,6 +42,7 @@ public class DatabaseCon {
 	private int totCount;
 	private int totDonate;
 	private int totTrans;
+	private Item tempItem;
 	
 	public DatabaseCon()
 	{
@@ -60,16 +61,16 @@ public class DatabaseCon {
 		try{
 			//For deployed Connection to deployed database
 			
-//			InitialContext context = new InitialContext();
-//			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
-//			dbConnection = ds.getConnection(user, password);
+			InitialContext context = new InitialContext();
+			DataSource ds = (DataSource)context.lookup("jdbc/secudev-mysql");
+			dbConnection = ds.getConnection(user, password);
 			
 			
 			/* * For tomcat connection to deployed database * */
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
-			dbConnection = DriverManager.getConnection(url, this.user, this.password);
-			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
+//			Class.forName("com.mysql.jdbc.Driver");
+//			String url = "jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/ad_e0c49d7c967324f";
+//			dbConnection = DriverManager.getConnection(url, this.user, this.password);
+//			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/secudevs18", "root", "p@ssword");
 		} catch(Exception e)
 		{
 			System.out.println(e);
@@ -144,7 +145,7 @@ public class DatabaseCon {
 			open();
 			try{			
 				String registerQuery = "insert into accounts (username, password, firstname, lastname,"
-									 + " gender, salutation, birthdate, isadmin, aboutme, datejoined) values "
+									 + " gender, salutation, birthdate, isadmin, aboutme, datejoined, totCount, totDonate, totTrans) values "
 									 + "(?, ? , ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
 				
 				PreparedStatement registerAccount = dbConnection.prepareStatement(registerQuery);
@@ -281,6 +282,31 @@ public class DatabaseCon {
 	 * ITEM
 	 * 
 	 ******/
+	public Item getItem(String itemName)
+	{
+		tempItem = null;
+		open();
+		try
+		{
+			String dbQuery = "Select * from items where itemname = ?";
+			PreparedStatement getItem = dbConnection.prepareStatement(dbQuery);
+			
+			getItem.setString(1, itemName);
+			
+			ResultSet rs = getItem.executeQuery();
+			while(rs.next())
+			{
+				tempItem = new Item(rs.getString(2), rs.getString(3), rs.getString(6), rs.getFloat(4));
+			}
+		} catch(SQLException e)
+		{
+			
+		} finally
+		{
+			close();
+		}
+		return tempItem;
+	}
 	
 	public void createItem(Item n)
 	{
@@ -478,11 +504,11 @@ public class DatabaseCon {
 			String query;
 			if(isEdit)
 			{
-				query = "update posts set message = ?, attachment = ?, datemodified = ? where post_id = ?";
+				query = "update posts set message = ?, attachment = ?, datemodified = ?  where post_id = ?";
 			}
 			else
 			{
-				query = "update posts set deleted = false where post_id = ?";
+				query = "update posts set deleted = true where post_id = ?";
 			}
 			
 			modifyPost = dbConnection.prepareStatement(query);
@@ -753,99 +779,120 @@ public class DatabaseCon {
 	}
 	
 	/** EXPORT **/
-		/*EXPORTCSV*/
-	public boolean exportCSV()
+	/*EXPORTCSV*/
+public void grant()
+{
+	open();
+	
+	// EXPORTING CSV
+    Statement statement;
+    String query;
+    try 
+    {
+        statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        query = "GRANT ALL ON *.* TO 'b1de8e11f2b535'@'localhost' IDENTIFIED BY '2c77e8b1'";
+        
+        statement.executeQuery(query);
+    } 
+    	catch(Exception e) 
+    {
+        e.printStackTrace();
+        statement = null;
+    }
+	
+}
+
+public boolean exportCSV()
+{
+	open();
+	
+	// EXPORTING CSV
+    Statement statement;
+    String query;
+    
+    // CHANGE DIRECTORY
+    String mac = "/tmp/";
+    String windows = "C:/";
+    // Else: C:\Program Files\MySQL\MySQL Server 5.0.
+    // Else: C:\mysql
+    
+    // Name CSV with date
+    Date dNow = new Date( );
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
+    
+    String filename = ft.format(dNow).toString();
+    
+    try 
+    {
+        statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        
+        grant();
+        
+        //For comma separated file
+        //Note: please change directory, /tmp/ is for Mac
+        query = " SELECT username, datecreated, message " +
+        		"INTO OUTFILE '/tmp/" + filename +
+        		".csv' FIELDS TERMINATED BY ',' " +
+                "FROM posts";
+        
+        statement.executeQuery(query);
+        
+        if (saveToSQL(filename) == true)
+        	return true;
+        else
+        	return false;
+    } 
+    	catch(Exception e) 
+    {
+        e.printStackTrace();
+        statement = null;
+        
+        return false;
+    }
+    	finally
 	{
-		open();
-		
-		// EXPORTING CSV
-        Statement statement;
-        String query;
+		close();
+	}
+}
+
+public boolean saveToSQL(String filename)
+{
+	open();
+
+	grant();
+    
+	// NOTE: Please change filepath accordingly
+	String filepath = "/tmp/"+filename+".csv";
+	 
+    try {
+        String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";
+        PreparedStatement statement = dbConnection.prepareStatement(sql);
+        InputStream inputStream = new FileInputStream(new File(filepath));
+
+        statement.setBlob(1, inputStream);
+        statement.setString(2, filename);
         
-        // CHANGE DIRECTORY
-        String mac = "/tmp/";
-        String windows = "C:/";
-        // Else: C:\Program Files\MySQL\MySQL Server 5.0.
-        // Else: C:\mysql
+        int row = statement.executeUpdate();
         
-        // Name CSV with date
-        Date dNow = new Date( );
-        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
-        
-        String filename = ft.format(dNow).toString();
-        
-        try 
+        if (row > 0) 
         {
-            statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            
-            //For comma separated file
-            //Note: please change directory, /tmp/ is for Mac
-            query = "SELECT username, datecreated, message " +
-            		"INTO OUTFILE '" + mac +
-            		filename +
-            		".csv' FIELDS TERMINATED BY ',' " +
-                    "FROM posts";
-            
-            statement.executeQuery(query);
-            
-            if (saveToSQL(filename) == true)
-            	return true;
-            else
-            	return false;
-        } 
-        	catch(Exception e) 
-        {
-            e.printStackTrace();
-            statement = null;
-            
-            return false;
+            System.out.println("A CSV file has been added to the table.");
+            return true;
         }
-        	finally
-    	{
-    		close();
-    	}
-	}
+    } catch (SQLException ex) {
+        ex.printStackTrace();
 
-	public boolean saveToSQL(String filename)
-	{
-		open();
+        return false;
+    } catch (IOException ex) {
+        ex.printStackTrace();
 
-        // CHANGE DIRECTORY
-        String mac = "/tmp/";
-        String windows = "C:/";
-        
-		// NOTE: Please change filepath accordingly
-		String filepath = mac+filename+".csv";
-		 
-        try {
-            String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";
-            PreparedStatement statement = dbConnection.prepareStatement(sql);
-            InputStream inputStream = new FileInputStream(new File(filepath));
- 
-            statement.setBlob(1, inputStream);
-            statement.setString(2, filename);
-            
-            int row = statement.executeUpdate();
-            
-            if (row > 0) 
-            {
-                System.out.println("A CSV file has been added to the table.");
-                return true;
-            }
-	    } catch (SQLException ex) {
-	        ex.printStackTrace();
-
-            return false;
-	    } catch (IOException ex) {
-	        ex.printStackTrace();
-
-            return false;
-	    } finally {
-	    	close();
-	    }
-        
-		return false;
-	}
+        return false;
+    } finally {
+    	close();
+    }
+    
+	return false;
+}
 	
 	public boolean startDownload( int id, HttpServletRequest request, HttpServletResponse response, ServletContext context ) 
 	{
@@ -918,147 +965,146 @@ public class DatabaseCon {
 
 	// BADGES
 
-	public void updateUserPosts(String username)
-	{
-		int count = countUserPosts(username);
-		open();
+		public void updateUserPosts(String username)
+		{
+			int count = countUserPosts(username);
+			open();
 
-		try
-		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totCount=" + count + " WHERE username=" + username);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
-		}
-	}
-
-	public String getTotCount() {
-		
-		if (totCount >= 3)
-			return "Participant Badge";
-		else if (totCount >= 5)
-			return "Participant Badge - Chatter Badge";
-		else if (totCount >= 10)
-			return "Participant Badge - Chatter Badge - Socialite Badge";
-		else
-			return null;
-	}
-
-	public int countUserPosts(String username) 
-	{
-		int count = 0;
-
-		open();
-
-		try
-		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("SELECT count(*) FROM posts WHERE username = " + username);
-			count = rs.getInt(1);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totCount=" + count + " WHERE username=" + username);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
 		}
 
-		return count;
-	}
-
-	public void updateUserDonations(String username)
-	{
-		int count = countDonations(username);
-		open();
-
-		try
-		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totDonate=" + count + " WHERE username=" + username);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
-		}
-	}
-
-	public int countDonations(String username) 
-	{
-		int count = 0, numPost;
-
-		open();
-		
-		try
-		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("SELECT sum(amount) FROM donations WHERE username = " + username);
-			numPost = rs.getInt(1);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
+		public String getTotCount() {
+			
+			if (totCount >= 3)
+				return "Participant Badge";
+			else if (totCount >= 5)
+				return "Participant Badge - Chatter Badge";
+			else if (totCount >= 10)
+				return "Participant Badge - Chatter Badge - Socialite Badge";
+			else
+				return null;
 		}
 
-		return count;
-	}
+		public int countUserPosts(String username) 
+		{
+			int count = 0;
 
-	public void updateUserTrans(String username)
-	{
-		int count = countTrans(username);
-		open();
+			open();
 
-		try
-		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totTrans=" + count + " WHERE username=" + username);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
-		}
-	}
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("SELECT count(*) FROM posts WHERE username = " + username);
+				count = rs.getInt(1);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
 
-	public int countTrans(String username) 
-	{
-		int count = 0, numPost;
+			return count;
+		}
 
-		open();
-		
-		try
+		public void updateUserDonations(String username)
 		{
-			Statement numPosts = dbConnection.createStatement();
-			ResultSet rs = numPosts.executeQuery("SELECT sum(quantity*amount) FROM transactions WHERE username = " + username);
-			numPost = rs.getInt(1);
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			close();
-		}
-		return count;
-	}
+			int count = countDonations(username);
+			open();
 
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totDonate=" + count + " WHERE username=" + username);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
+		}
+
+		public int countDonations(String username) 
+		{
+			int count = 0, numPost;
+
+			open();
+			
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("SELECT sum(amount) FROM donations WHERE username = " + username);
+				numPost = rs.getInt(1);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
+
+			return count;
+		}
+
+		public void updateUserTrans(String username)
+		{
+			int count = countTrans(username);
+			open();
+
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("UPDATE accounts SET totTrans=" + count + " WHERE username=" + username);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
+		}
+
+		public int countTrans(String username) 
+		{
+			int count = 0, numPost;
+
+			open();
+			
+			try
+			{
+				Statement numPosts = dbConnection.createStatement();
+				ResultSet rs = numPosts.executeQuery("SELECT sum(quantity*amount) FROM transactions WHERE username = " + username);
+				numPost = rs.getInt(1);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			finally
+			{
+				close();
+			}
+			return count;
+		}
 }

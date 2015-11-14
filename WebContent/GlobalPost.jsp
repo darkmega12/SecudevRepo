@@ -123,8 +123,8 @@
 
 <form action="PostController" method="get">
 PAGE NUMBER: 
-<% 	int total_pages = ((int)session.getAttribute("total")) / 10; 
-	if((int)session.getAttribute("total") % 10 > 0)
+<% 	int total_pages = ((Integer)session.getAttribute("total")) / 10; 
+	if((Integer)session.getAttribute("total") % 10 > 0)
 		total_pages++;
 	for(int i=1; i <= total_pages; i++) { %>
 		<input type="submit" name="page_num" id="page_footer" class="sub" value = <%= i %>>

@@ -43,6 +43,14 @@
     <servlet-name>EditPost</servlet-name>
     <servlet-class>controller.EditPostController</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>ItemController</servlet-name>
+  	<servlet-class>controller.ItemController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ItemStoreController</servlet-name>
+  	<servlet-class>controller.ItemStoreController</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>HomePage</servlet-name>
     <url-pattern>/user</url-pattern>
@@ -78,5 +86,13 @@
   <servlet-mapping>
     <servlet-name>Images</servlet-name>
     <url-pattern>/user/images</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ItemController</servlet-name>
+  	<url-pattern>/store</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+  	<servlet-name>ItemStoreController</servlet-name>
+  	<url-pattern>/store/items</url-pattern>
   </servlet-mapping>
 </web-app>

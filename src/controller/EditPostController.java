@@ -68,7 +68,7 @@ public class EditPostController extends HttpServlet {
 			String username = request.getParameter("username");
 			
 			Account currAccount = (Account)request.getSession().getAttribute("account");
-			if(currAccount.isAdmin() || currAccount.getUsername().equals(request.getAttribute("username")))
+			if(currAccount.getUsername().equals(request.getAttribute("username"))|| currAccount.isAdmin())
 			{
 				if(dbConnection.authenticatePost(post_id, username)) //checks if the right username is with the right post
 				{

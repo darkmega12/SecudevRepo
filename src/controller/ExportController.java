@@ -40,12 +40,10 @@ public class ExportController extends HttpServlet {
 		DatabaseCon dbConnection = new DatabaseCon();
 		
 		if (dbConnection.exportCSV() == true)
-			System.out.println("Backup Successful");
+			response.sendRedirect("BackupSuccess.jsp");
 		else
-			System.out.println("Backup Unsuccessful");
-		
+			response.sendRedirect("BackupFailed.jsp");
 
-		System.out.println("HeyDay");
 	}
 
 }
