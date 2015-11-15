@@ -1,0 +1,22 @@
+body, h1, h2, h3, h4, h5, h6, p
+{
+	font-family: Helvetica;
+}
+
+body
+{
+	margin: 0px;
+	padding: 40px;
+	background-color: #eee;
+}
+
+table, th, td
+{
+	border: 1px solid black;
+}
+
+th
+{
+	text-align: center;
+	font-weight: 800; 
+}
