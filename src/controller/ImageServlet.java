@@ -24,19 +24,11 @@ public class ImageServlet extends HttpServlet {
    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-try{
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		String url = "jdbc:mysql://localhost:3306/secudevs18";
-		
-		Connection dbConnection = DriverManager.getConnection(url, "root", "p@ssword");
+		DatabaseCon dbConnection = new DatabaseCon();
+    	try{
+		dbConnection.open();
 		String postQuery = "SELECT attachment,imagename FROM posts WHERE post_id = ?";
-		PreparedStatement pstmt = dbConnection.prepareStatement(postQuery);
+		PreparedStatement pstmt = dbConnection.getConnection().prepareStatement(postQuery);
 		
         pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
 
@@ -51,9 +43,13 @@ try{
                 }
             
         }
-    catch (SQLException e) {
+    	catch (SQLException e) {
             throw new ServletException("Something failed at SQL/DB level.", e);
         }
+    	finally
+    	{
+    		dbConnection.close();
+    	}
     }
 
 }

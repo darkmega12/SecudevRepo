@@ -68,38 +68,29 @@ public class SearchController extends HttpServlet {
 			}
 			else if (request.getParameter("searchType") != null && request.getParameter("searchType").equals("advanced"))
 			{
-				System.out.println("I go in req");
-				
-				String[] criteria = new String[3];
-				String[] value = new String[3];
-				String[] ops = new String[2];
-			
-				for(int i = 0; i < 3; i++)
+				if(request.getParameterValues("mytext[]")!=null)
 				{
-					
-						criteria[i] = request.getParameter("searchtype"+(i+1));
-					criteria[i] = authenticate.sanitize(criteria[i]);
-					System.out.println("I go in typ "+i);
-				}
-				for(int i = 0; i < 3; i++)
-				{
-					if(request.getParameter("search"+(i+1)) != null)
+					String[] value = request.getParameterValues("mytext[]");
+					String[] criterias = request.getParameterValues("searchtype1");
+					String[] setOperator = request.getParameterValues("operator1");
+					int w = 0;
+					for(String i:value)
 					{
-					value[i] = request.getParameter("search"+(i+1));
-					value[i] = authenticate.sanitize(value[i]);
+						System.out.println("------------------------------"+i);
+						System.out.println("++++++++++++++++++++++++++++++"+criterias[w]);
+						System.out.println("_______________________________"+setOperator[w]);
+						w++;
 					}
-					System.out.println("I go in val "+i);
-				}
-				for(int i = 0; i < 2; i++)
-				{
-					ops[i] = request.getParameter("logicgate"+(i+1));
-					ops[i] = authenticate.sanitize(ops[i]);
-					System.out.println("I go in ops "+i);
-				}
-				searchedPosts = db.advancedSearch(criteria, value, ops);
-				if(searchedPosts.size() > 10)
-				{
-					searchedPosts = db.getSearchedPosts(1);
+					for(int i=0;i<value.length;i++)
+					{
+						value[i] = authenticate.sanitize(value[i]);
+						if(!authenticate.validateCriteria(criterias[i]) || !authenticate.validateOperator(setOperator[i]))
+						{
+							break;
+						}
+					}
+					System.out.println(authenticate.testSqlScript(criterias, value, setOperator));
+					searchedPosts = db.advanceSearch(criterias, value, setOperator);
 				}
 			}
 		}

@@ -24,36 +24,31 @@ public class ImageServlet2 extends HttpServlet {
    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-try{
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		String url = "jdbc:mysql://localhost:3306/secudevs18";
-		
-		Connection dbConnection = DriverManager.getConnection(url, "root", "p@ssword");
-		String postQuery = "SELECT itemimage,imagetype FROM items WHERE itemid = ?";
-		PreparedStatement pstmt = dbConnection.prepareStatement(postQuery);
-		
-        pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
-
-            ResultSet resultSet = pstmt.executeQuery();
-                if (resultSet.next()) {
-                    byte[] content = resultSet.getBytes("itemimage");
-                    response.setContentType(resultSet.getString("imagetype"));
-                    response.setContentLength(content.length);
-                    response.getOutputStream().write(content);
-                } else {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-                }
-            
+    	DatabaseCon dbConnection = new DatabaseCon();
+		try{
+	    	dbConnection.open();
+	    	String postQuery = "SELECT itemimage,imagetype FROM items WHERE itemid = ?";
+			PreparedStatement pstmt = dbConnection.getConnection().prepareStatement(postQuery);
+			
+	        pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
+	
+	            ResultSet resultSet = pstmt.executeQuery();
+	                if (resultSet.next()) {
+	                    byte[] content = resultSet.getBytes("itemimage");
+	                    response.setContentType(resultSet.getString("imagetype"));
+	                    response.setContentLength(content.length);
+	                    response.getOutputStream().write(content);
+	                } else {
+	                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+	                }
         }
-    catch (SQLException e) {
+    	catch (SQLException e) {
             throw new ServletException("Something failed at SQL/DB level.", e);
-        }
+    	}
+    	finally
+    	{
+    		dbConnection.close();
+    	}
     }
 
 }

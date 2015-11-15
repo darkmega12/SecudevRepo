@@ -4,6 +4,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Forums</title>
 <style>
@@ -50,6 +51,12 @@
 								<option value="after date">After Date</option>
 								<option value="during date">On Date</option>
 						    </select>
+						    <select name="operator1">
+							    <option value="N/A">N/A</option>
+							    <option value="AND">AND</option>
+								<option value="OR">OR</option>
+						    </select>
+						    
 					    </div>
 					</div>
 			</div>
@@ -131,5 +138,26 @@ PAGE NUMBER:
 </form>
 </div>
 <% } %>
+
+<script>
+$(document).ready(function() {
+    var max_fields      = 20; //maximum input boxes allowed
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div><input type="text" name="mytext[]"/><select name="searchtype1"><option value="username">Username</option><option value="message">Post</option><option value="before date">Before Date</option><option value="after date">After Date</option><option value="during date">On Date</option></select><select name="operator1"><option value="N/A">N/A</option><option value="AND">AND</option><option value="OR">OR</option></select><a href="#" class="remove_field">Remove</a></div>'); //add input box
+        }
+    });
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
+</script>
 </body>
 </html>

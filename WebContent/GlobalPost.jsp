@@ -52,7 +52,13 @@
 								<option value="after date">After Date</option>
 								<option value="during date">On Date</option>
 						    </select>
+					    	<select name="operator1">
+							    <option value="N/A">N/A</option>
+							    <option value="AND">AND</option>
+								<option value="OR">OR</option>
+						    </select>
 					    </div>
+					    
 					</div>
 			</div>
 			<div class="search_preferences">
@@ -144,7 +150,7 @@ $(document).ready(function() {
         e.preventDefault();
         if(x < max_fields){ //max input box allowed
             x++; //text box increment
-            $(wrapper).append('<div><input type="text" name="mytext[]"/><select name="searchtype1"><option value="username">Username</option><option value="message">Post</option><option value="before date">Before Date</option><option value="after date">After Date</option><option value="during date">On Date</option></select><a href="#" class="remove_field">Remove</a></div>'); //add input box
+            $(wrapper).append('<div><input type="text" name="mytext[]"/><select name="searchtype1"><option value="username">Username</option><option value="message">Post</option><option value="before date">Before Date</option><option value="after date">After Date</option><option value="during date">On Date</option></select><select name="operator1"><option value="N/A">N/A</option><option value="AND">AND</option><option value="OR">OR</option></select><a href="#" class="remove_field">Remove</a></div>'); //add input box
         }
     });
     

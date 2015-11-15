@@ -653,23 +653,22 @@ public class DatabaseCon {
 		return searchedPosts;
 	}
 	
-	public ArrayList<Post> advancedSearch(String[] criteria, String[] value, String[] setOperator)
+	public ArrayList<Post> advanceSearch(String[] criteria, String[] value, String[] setOperator)
 	{
 		ArrayList<Post> searchedPosts = new ArrayList<Post>();
 		System.out.println("I go in");
 		open();
 		try 
 		{
-			PreparedStatement advancedSearch;
+			PreparedStatement advanceSearch;
 			String query = "Select * from posts where ";
 			for(int i=0; i<criteria.length; i++)
 			{
-				System.out.println("I go in num "+i);
 				if(i > 0)
 				{
 					if(setOperator[i-1].equals("AND"))
 					{
-						query += " and ";
+						query += "and exists (Select * from posts where ";
 					}
 					else if(setOperator[i-1].equals("OR"))
 					{
@@ -677,52 +676,56 @@ public class DatabaseCon {
 					}
 					else
 					{
-						break;
+						continue;
 					}
 				}
 				String queryCriteria = criteria[i];
-				if(queryCriteria.equals("before date"))
+				if(criteria[i].equals("before date"))
 				{
-					query += "datemodified <= ? ";
+					queryCriteria = "datemodified <= ? ";
 				}
-				else if (queryCriteria.equals("after date"))
+				else if (criteria[i].equals("after date"))
 				{
-					query += "datemodified >= ? ";
+					queryCriteria = "datemodified >= ? ";
 				}
-				else if (queryCriteria.equals("during date"))
+				else if (criteria[i].equals("during date"))
 				{
-					query += "datemodified = ? ";
+					queryCriteria = "datemodified = ? ";
 				}
-				else if(queryCriteria.equals("message"))
+				else if(criteria[i].equals("message"))
 				{
-					query += "message like ?";
+					queryCriteria = "message like ?";
 				}
-				else if(queryCriteria.equals("username"))
+				else
 				{
-					query += "username = ?";
+					queryCriteria = criteria[i] + " = ? ";
 				}
-		
-			
+				query += queryCriteria;
+				
+				if(i>0 && setOperator[i-1].equals("AND"))
+				{
+					query += ")";
+				}
 			}
 			query += ";";
 			System.out.println(query);
 			
-			advancedSearch = dbConnection.prepareStatement(query);
+			advanceSearch = dbConnection.prepareStatement(query);
 			for(int i=0; i<value.length; i++)
 			{
 				if(value[i] != "" && !criteria[i].equals("message"))
-				advancedSearch.setString(i+1, value[i]);
+				advanceSearch.setString(i+1, value[i]);
 				else if(value[i] != "" && criteria[i].equals("message"))
-				advancedSearch.setString(i+1, "%"+value[i]+"%");
+				advanceSearch.setString(i+1, "%"+value[i]+"%");
 			}
-			ResultSet rs = advancedSearch.executeQuery();
+			ResultSet rs = advanceSearch.executeQuery();
 			while(rs.next())
 			{
 				searchedPosts.add(new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getDate(6)));
 			}
 		} catch(Exception e)
 		{
-			
+			System.out.println(e);
 		} finally
 		{
 			close();
@@ -862,7 +865,7 @@ public boolean saveToSQL(String filename)
 	grant();
     
 	// NOTE: Please change filepath accordingly
-	String filepath = "/tmp/"+filename+".csv";
+	String filepath = "//"+filename+".csv";
 	 
     try {
         String sql = "INSERT INTO backup (csv_id, csv_file, date) values (null, ?, ?)";

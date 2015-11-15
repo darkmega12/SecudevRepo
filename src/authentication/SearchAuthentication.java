@@ -19,10 +19,10 @@ public class SearchAuthentication {
 		searchCriteria.add("after date");
 		searchCriteria.add("during date");
 		
-		
-		setOperators.add("N/A");
 		setOperators.add("AND");
 		setOperators.add("OR");
+		setOperators.add("N/A");
+		
 	}
 	
 	public boolean validateCriteria(String criteria)
@@ -30,9 +30,9 @@ public class SearchAuthentication {
 		return searchCriteria.contains(criteria);
 	}
 	
-	public boolean validateOperator(String operator)
+	public boolean validateOperator (String criteria)
 	{
-		return setOperators.contains(operator);
+		return setOperators.contains(criteria);
 	}
 	
 	//quickfix to an escape-on-input approach of sanitizing
@@ -56,13 +56,13 @@ public class SearchAuthentication {
 		{
 			if(i > 0)
 			{
-				if(setOperator[i].equals("AND"))
+				if(setOperator[i-1].equals("AND"))
 				{
-					query += "exists (Select * from posts where ";
+					query += "and exists (Select * from posts where ";
 				}
-				else if(setOperator[i].equals("OR"))
+				else if(setOperator[i-1].equals("OR"))
 				{
-					query += "";
+					query += " or ";
 				}
 				else
 				{
@@ -70,21 +70,21 @@ public class SearchAuthentication {
 				}
 			}
 			String queryCriteria = criteria[i];
-			if(query.equals("before date"))
+			if(criteria[i].equals("before date"))
 			{
 				queryCriteria = "datemodified <= ? ";
 			}
-			else if (query.equals("after date"))
+			else if (criteria[i].equals("after date"))
 			{
 				queryCriteria = "datemodified >= ? ";
 			}
-			else if (query.equals("during date"))
+			else if (criteria[i].equals("during date"))
 			{
 				queryCriteria = "datemodified = ? ";
 			}
-			else if(query.equals("message"))
+			else if(criteria[i].equals("message"))
 			{
-				queryCriteria = "message like %?%";
+				queryCriteria = "message like \"%?%\"";
 			}
 			else
 			{
@@ -92,7 +92,7 @@ public class SearchAuthentication {
 			}
 			query += queryCriteria;
 			
-			if(i>0 && setOperator[i].equals("AND"))
+			if(i>0 && setOperator[i-1].equals("AND"))
 			{
 				query += ")";
 			}
