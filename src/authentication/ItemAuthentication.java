@@ -41,6 +41,7 @@ public class ItemAuthentication {
 		{
 			item = match.group(0);
 		}
+		item.replace("@", "");
 		return item;
 	}
 	
@@ -49,9 +50,9 @@ public class ItemAuthentication {
 		String edited = sanitizeItem(input);
 		String itemUrl;
 		//If deployed
-		itemUrl = "<a href=\"https://securedev.mybluemix.net/store/item?name="+item+"\">"+item+"</a>";
+		itemUrl = "<a href=\"https://securedev.mybluemix.net/store/item?itemName="+item+"\">"+item+"</a>";
 		//if local
-		itemUrl = "<a href=\"localhost:8088/TestSecuProj/store/item?name="+item+"\">"+item+"</a>";
+		itemUrl = "<a href=\"localhost:8088/TestSecuProj/store/item?itemName="+item+"\">"+item+"</a>";
 		edited = Pattern.compile("@[\\w\\s\\d]*@").matcher(edited).replaceAll(itemUrl);
 		return edited;
 	}

@@ -72,7 +72,7 @@ public class PostController extends HttpServlet {
 		ItemAuthentication authenticate = new ItemAuthentication();
 		try
 		{
-			String itemname = (String)request.getSession().getAttribute("itemName");
+			String itemname = "";
 			String message = "";
 			//String imagepath = "";
 			if(request.getParameter("message") != null)
@@ -87,6 +87,7 @@ public class PostController extends HttpServlet {
 			else
 			{
 				message = validate.sanitizePost(request.getParameter("message"));
+				itemname = authenticate.getLinkItem(message);
 				message = authenticate.provideItemLink(message, itemname);  
 				InputStream inputStream = null; // input stream of the upload file
 			         

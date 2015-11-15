@@ -31,14 +31,21 @@ public class ItemStoreController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ItemAuthentication authenticate = new ItemAuthentication();
-		HttpSession session = request.getSession();
-		DatabaseCon db = new DatabaseCon();
-		String itemName = request.getParameter("itemName");
-		itemName = authenticate.sanitizeItem(itemName);
-		Item currItem = db.getItem(itemName);
-		session.setAttribute("currItem", currItem);
-		response.sendRedirect("Store.jsp");
+		try
+		{
+			ItemAuthentication authenticate = new ItemAuthentication();
+			HttpSession session = request.getSession();
+			DatabaseCon db = new DatabaseCon();
+			String itemName = request.getParameter("itemName");
+			itemName = authenticate.sanitizeItem(itemName);
+			Item currItem = db.getItem(itemName);
+			session.setAttribute("currItem", currItem);
+			response.sendRedirect("localhost:8088/TestSecuProj/Store.jsp");
+		}
+		catch(Exception e)
+		{
+			response.sendRedirect("localhost:8088/TestSecuProj/Store.jsp");
+		}
 	}
 
 	/**
