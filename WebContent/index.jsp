@@ -37,7 +37,8 @@
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name = "password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-      <form action="RegisterController" method="get">
+      <form class="form-signin" action="RegisterController" method="get">
+        <h2 class="form-signin-heading">New User?</h2>
         <button type="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
       </form>
       <b>
