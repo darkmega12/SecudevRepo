@@ -46,13 +46,13 @@
 	<p> Gender: <%=curr.getGender() %></p>
 
 	
-	<a href='EditProfile.jsp'>Edit Profile </a><br/>
-	<a href='CreatePost.jsp'>Post Message</a><br/></br>
-	<a href='ItemController'>The Store</a><br>
-	<a href='PostController'>View Forums</a><br>
+	<a href='https://securedev.mybluemix.net/user/edit/profile'>Edit Profile </a><br/>
+	<a href='https://securedev.mybluemix.net/user/create/post'>Post Message</a><br/></br>
+	<a href='https://securedev.mybluemix.net/store/'>The Store</a><br>
+	<a href='https://securedev.mybluemix.net/globalPosts'>View Forums</a><br>
 	<% if(curr.isAdmin()) { %>
-	<a href='Backup.jsp'>Create Backup</a></br>
-	<a href='ManagementConsole.jsp'>Management Console</a></br>
+	<a href='https://securedev.mybluemix.net/Backup.jsp'>Create Backup</a></br>
+	<a href='https://securedev.mybluemix.net/ManagementConsole.jsp'>Management Console</a></br>
 	<% } %>
 	<% if(curr.isAdmin()) 
 		{
@@ -63,7 +63,7 @@
 	  }
 	%>
 	</br></br>
-	<form action = "LogoutController" method = "post">
+	<form action = "https://securedev.mybluemix.net/user/logout" method = "post">
 	<input type = "submit" value = "Logout" />
 	</form><br/>
 </div>

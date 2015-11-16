@@ -61,7 +61,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CreatePost</servlet-name>
-    <url-pattern>/user/createpost</url-pattern>
+    <url-pattern>/user/create/post</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
