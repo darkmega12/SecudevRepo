@@ -105,7 +105,7 @@ public class SearchController extends HttpServlet {
 		
 		if(success)
 		{
-			response.sendRedirect("SearchPost.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/SearchPost.jsp");
 		}
 	}
 

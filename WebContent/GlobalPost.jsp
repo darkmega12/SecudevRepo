@@ -19,13 +19,13 @@
 <body>
 	<div id="nav">
 			<h1>FORUMS</h1>
-			<a href="HomePage.jsp">Home</a>
-			<a href='PostController'>View Forums</a>
-			<a href="ItemController">Store</a><br>
+			<a href="https://securedev.mybluemix.net/user">Home</a>
+			<a href='https://securedev.mybluemix.net/globalPosts'>View Forums</a>
+			<a href="https://securedev.mybluemix.net/store">Store</a><br>
 	</div>
 	<% if(session.getAttribute("account") == null) 
 	{
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("https://securedev.mybluemix.net");
 	}
 	else
 	{
@@ -34,7 +34,7 @@
 	%>
 
 	<div id="search_pane">
-		<form action="SearchController" method="get">
+		<form action="https://securedev.mybluemix.net/user/search/post" method="get">
 			<div id="basic_search">
 				<input type="text" placeholder="Search..." name="search"/>
 			</div>
@@ -93,7 +93,7 @@
 				<div class="align">
 				<% tempAccount = accounts.get(posts.get(i).getUsername()); %>
 				<%= tempAccount.getfName() %> <br/>
-				<form action="EditProfileController" method="get">
+				<form action="https://securedev.mybluemix.net/user/edit/profile" method="get">
 				<input type="submit" name="username" class="sub" value=<%= tempAccount.getUsername() %>> <br/>
 				</form>
 				<%= tempAccount.getDateJoined() %>
@@ -105,7 +105,7 @@
 					out.print(formatter.format(posts.get(i).getDateCreated()));
 				%> 
 				<% if(posts.get(i).getUsername().equals(curr.getUsername()) || isAdmin) { %>
-					<form action = "EditPostController" method="post">
+					<form action = "https://securedev.mybluemix.net/user/edit/post" method="post">
 						<input type="hidden" name="post_id" value = <%=posts.get(i).getPostid()%>>
 						<input type="hidden" name="username" value = <%=posts.get(i).getUsername()%>>
 						<input type="submit" class="sub" name="edit" value="edit"/>
@@ -115,7 +115,7 @@
 				<br>
 				<%= posts.get(i).getMessage() %> <br><br>
 				
-				<img src="/TestSecuProj/images?id=<%=posts.get(i).getPostid()%>"></img>
+				<img src="https://securedev.mybluemix.net/images?id=<%=posts.get(i).getPostid()%>"></img>
 				<% out.print(formatter.format(posts.get(i).getDateModified())); %>
 				</div>
 			</td>
@@ -127,7 +127,7 @@
 <br><br>
 <div id="footer">
 
-<form action="PostController" method="get">
+<form action="https://securedev.mybluemix.net/globalPosts" method="get">
 PAGE NUMBER: 
 <% 	int total_pages = ((Integer)session.getAttribute("total")) / 10; 
 	if((Integer)session.getAttribute("total") % 10 > 0)

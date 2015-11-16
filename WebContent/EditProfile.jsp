@@ -23,7 +23,7 @@
 	<% 
 		if(session.getAttribute("account") == null)
 		{
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net");
 		}
 		else
 		{
@@ -94,7 +94,7 @@
 
 	<div class="container">
 
-      <form action= "EditProfileController" class="form-signin" onsubmit="return validateRegistration()" method="post">
+      <form action= "https://securedev.mybluemix.net/user/edit/profile" class="form-signin" onsubmit="return validateRegistration()" method="post">
         <h2 class="form-signin-heading">Edit <%= curr.getUsername() %>'s Profile</h2>
        	<%ArrayList<String> errors = (ArrayList<String>)session.getAttribute("registerErrors"); %>
 		<% if(errors != null) { %>
@@ -180,7 +180,7 @@
 		%>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
-        <a href="HomePage.jsp" class="btn btn-lg btn-primary btn-block" >Back</a>
+        <a href="https://securedev.mybluemix.net/user" class="btn btn-lg btn-primary btn-block" >Back</a>
       </form>
 
     </div>

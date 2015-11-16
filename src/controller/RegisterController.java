@@ -42,8 +42,7 @@ public class RegisterController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		request.getSession().setAttribute("registerErrors", null);
-		response.sendRedirect("Register.jsp");
+		response.sendRedirect("https://securedev.mybluemix.net/register");
 	}
 
 	/**
@@ -140,8 +139,8 @@ public class RegisterController extends HttpServlet {
 				}  else
 				{
 					errors.add("Account not created. Possible duplicate user");
-					response.sendRedirect("Register.jsp");
 					session.setAttribute("registerErrors", errors);
+					response.sendRedirect("https://securedev.mybluemix.net/register");
 				}
 			
 			
@@ -149,7 +148,6 @@ public class RegisterController extends HttpServlet {
 				System.out.println("There's error");
 				for(String error:errors)
 					System.out.println(error);
-				response.sendRedirect("Register.jsp");
 				session.setAttribute("registerErrors", errors);
 				
 			}
@@ -157,8 +155,8 @@ public class RegisterController extends HttpServlet {
 		catch(Exception e)
 		{
 			System.out.println("There's an error: "+e);
-			response.sendRedirect("Register.jsp");
 			session.setAttribute("registerErrors", errors);
+			response.sendRedirect("https://securedev.mybluemix.net/register");
 
 		}
 	}

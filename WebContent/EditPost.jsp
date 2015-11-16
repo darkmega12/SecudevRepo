@@ -26,7 +26,7 @@
 <div id=rcorners2>
 	<% if(session.getAttribute("account") == null) 
 	{
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("https://securedev.mybluemix.net");
 	}
 	else
 	{
@@ -36,7 +36,7 @@
 	<h2> <%= curr.getfName() %>, change your post!</h2>
 	
 	<a href="HomePage.jsp">Home</a>
-	<a href="PostController">View Forums</a>
+	<a href="https://securedev.mybluemix.net/globalPosts">View Forums</a>
 	
 	<% if(session.getAttribute("errors") != null) {%>
 		<p id=error> <%= (String)session.getAttribute("errors") %> </p>
@@ -50,7 +50,7 @@
 	
 	<br><br><br><br>
 	<% Post p = (Post)session.getAttribute("editpost"); %>
-	<form action="EditPostController" method="post" enctype="multipart/form-data">
+	<form action="https://securedev.mybluemix.net/user/edit/post" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="edit" value = "editpost" />
 		<input type="hidden" name="post_id" value = <%=p.getPostid()%>>
 		<input type="hidden" name="username" value = <%=p.getUsername()%>>

@@ -40,12 +40,13 @@ public class ItemStoreController extends HttpServlet {
 			itemName = authenticate.sanitizeItem(itemName);
 			Item currItem = db.getItem(itemName);
 			session.setAttribute("currItem", currItem);
-			response.sendRedirect("localhost:8088/TestSecuProj/store");
+			response.sendRedirect("https://securedev.mybluemix.net/store");
+//			response.sendRedirect("localhost:8088/TestSecuProj/store");
 		}
 		catch(Exception e)
 		{
-			response.sendRedirect("localhost:8088/TestSecuProj/store");
-		}
+			System.out.println(e);
+			response.sendRedirect("https://securedev.mybluemix.net/store");		}
 	}
 
 	/**

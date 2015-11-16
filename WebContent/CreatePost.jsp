@@ -26,7 +26,7 @@
 <div id=rcorners2>
 	<% if(session.getAttribute("account") == null) 
 	{
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("https://securedev.mybluemix.net");
 	}
 	else
 	{
@@ -49,7 +49,7 @@
 	<% } %>
 	
 	<br><br><br><br>
-	<form action="PostController" method="post" enctype="multipart/form-data">
+	<form action="https://securedev.mybluemix.net/globalPosts" method="post" enctype="multipart/form-data">
 		<table>
 			<tr><td><textarea name="message" rows="10"></textarea></td></tr>
 			<tr><td>Attach Photo: <input type="file" name="attachment"/></td></tr>

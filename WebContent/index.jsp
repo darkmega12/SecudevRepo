@@ -24,12 +24,12 @@
 <body>
 <% if(session.getAttribute("account") != null)
 	{
- 		response.sendRedirect("HomePage.jsp");
+ 		response.sendRedirect("https://securedev.mybluemix.net/user");
 	}
 %>
     <div class="container">
 
-      <form class="form-signin" action="LoginController" method="post">
+      <form class="form-signin" action="https://securedev.mybluemix.net/LoginController" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputUsername" class="sr-only">Username</label>
         <input id="inputUsername" class="form-control" placeholder="Username" name = "username" required autofocus>

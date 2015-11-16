@@ -17,7 +17,7 @@
 <% 
 	if(session.getAttribute("account") == null)
 	{
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("https://securedev.mybluemix.net");
 	}
 	else
 	{
@@ -57,7 +57,7 @@
 	<% if(curr.isAdmin()) 
 		{
 			session.setAttribute("isAdmin", true);
-			out.println("<a class='btn btn-lg btn-primary ' href='Register.jsp' class='button'>Register</a>");
+			out.println("<a class='btn btn-lg btn-primary ' href='https://securedev.mybluemix.net/register' class='button'>Register</a>");
 			out.println("a new user!");
 		}
 	  }

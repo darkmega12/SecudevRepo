@@ -44,6 +44,10 @@
     <servlet-class>controller.EditPostController</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>SearchPost</servlet-name>
+    <servlet-class>controller.SearchController</servlet-class>
+  </servlet>
+  <servlet>
   	<servlet-name>ItemController</servlet-name>
   	<servlet-class>controller.ItemController</servlet-class>
   </servlet>
@@ -83,6 +87,10 @@
     <servlet-name>EditPost</servlet-name>
     <url-pattern>/user/edit/post</url-pattern>
   </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>SearchPost</servlet-name>
+    <url-pattern>/user/search/post</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Images</servlet-name>
     <url-pattern>/user/images</url-pattern>
@@ -95,4 +103,14 @@
   	<servlet-name>ItemStoreController</servlet-name>
   	<url-pattern>/store/items</url-pattern>
   </servlet-mapping>
+  
+  <security-constraint>
+  	<web-resource-collection>
+		<web-resource-name>user</web-resource-name>
+		<url-pattern>/*</url-pattern>
+  	</web-resource-collection>
+  	<user-data-constraint>
+  		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+  	</user-data-constraint>
+  </security-constraint>
 </web-app>

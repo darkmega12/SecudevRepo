@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet {
 		Account currAccount = db.authenticate(username, password);
 		if(currAccount == null)
 		{
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/index.jsp");
 		}
 		else
 		{

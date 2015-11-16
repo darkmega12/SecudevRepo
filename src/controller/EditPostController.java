@@ -142,10 +142,10 @@ public class EditPostController extends HttpServlet {
 		}
 		if(!executed)
 		{
-			response.sendRedirect("EditPost.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/user/edit/post");
 		}
 		else
-			response.sendRedirect("GlobalPost.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/globalPosts");
 	}
 
 }

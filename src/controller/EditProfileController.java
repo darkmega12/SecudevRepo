@@ -44,7 +44,7 @@ public class EditProfileController extends HttpServlet {
 		String username =  request.getParameter("username");
 		if(username == null)
 		{
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/index.jsp");
 		}
 		else
 		{
@@ -148,20 +148,20 @@ public class EditProfileController extends HttpServlet {
 					session.setAttribute("account", currAccount);
 					session.setAttribute("isAdmin", isAdmin);
 					session.setAttribute("success", "Update Successful.");
-					response.sendRedirect("EditProfile.jsp");
+					response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
 				}  else
 				{
 					errors.add("Account not modified.");
-					response.sendRedirect("EditProfile.jsp");
+					response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
 					session.setAttribute("registerErrors", errors);
 				}
 			
 			
 			} else {
-				System.out.println("There's error");
+				System.out.println("https:securedev.mybluemix.net/user/edit/profile");
 				for(String error:errors)
 					System.out.println(error);
-				response.sendRedirect("EditProfile.jsp");
+				response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
 				session.setAttribute("registerErrors", errors);
 				
 			}
@@ -169,7 +169,7 @@ public class EditProfileController extends HttpServlet {
 		catch(Exception e)
 		{
 			System.out.println("There's an error: "+e);
-			response.sendRedirect("EditProfile.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
 			session.setAttribute("registerErrors", errors);
 
 		}
