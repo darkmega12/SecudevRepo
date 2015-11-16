@@ -46,7 +46,7 @@
 	<p> Gender: <%=curr.getGender() %></p>
 
 	
-	<a href='https://securedev.mybluemix.net/user/edit/profile'>Edit Profile </a><br/>
+	<a href='https://securedev.mybluemix.net/EditProfile.jsp'>Edit Profile </a><br/>
 	<a href='https://securedev.mybluemix.net/user/create/post'>Post Message</a><br/></br>
 	<a href='https://securedev.mybluemix.net/store/'>The Store</a><br>
 	<a href='https://securedev.mybluemix.net/globalPosts'>View Forums</a><br>

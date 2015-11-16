@@ -793,7 +793,7 @@ public void grant()
     try 
     {
         statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        query = "GRANT ALL ON *.* TO 'b1de8e11f2b535'@'localhost' IDENTIFIED BY '2c77e8b1'";
+        query = "GRANT ALL ON *.* TO 'b1de8e11f2b535'@'ad_e0c49d7c967324f' IDENTIFIED BY '2c77e8b1'";
         
         statement.executeQuery(query);
     } 
@@ -815,7 +815,7 @@ public boolean exportCSV()
     
     // CHANGE DIRECTORY
     String mac = "/tmp/";
-    String windows = "C:/";
+    String windows = "//";
     // Else: C:\Program Files\MySQL\MySQL Server 5.0.
     // Else: C:\mysql
     
@@ -834,7 +834,7 @@ public boolean exportCSV()
         //For comma separated file
         //Note: please change directory, /tmp/ is for Mac
         query = " SELECT username, datecreated, message " +
-        		"INTO OUTFILE '/tmp/" + filename +
+        		"INTO OUTFILE '//" + filename +
         		".csv' FIELDS TERMINATED BY ',' " +
                 "FROM posts";
         

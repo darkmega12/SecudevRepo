@@ -26,7 +26,7 @@
 <div id=rcorners2>
 	<% if(session.getAttribute("account") == null) 
 	{
-		response.sendRedirect("https://securedev.mybluemix.net");
+		response.sendRedirect("https://securedev.mybluemix.net/index.jsp");
 	}
 	else
 	{
@@ -35,8 +35,8 @@
 	
 	<h2> <%= curr.getfName() %>, speak up!</h2>
 	
-	<a href="HomePage.jsp">Home</a>
-	<a href="PostController">View Forums</a>
+	<a href="https://securedev.mybluemix.net/user">Home</a>
+	<a href="https://securedev.mybluemix.net/globalPosts">View Forums</a>
 	
 	<% if(session.getAttribute("errors") != null) {%>
 		<p id=error> <%= (String)session.getAttribute("errors") %> </p>

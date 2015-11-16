@@ -95,7 +95,7 @@
 					<p class="description"><%= it.get(i).getDescription() %></p>
 					<h2 class="item_price">$<%= it.get(i).getPrice() %></h2>
 							<div style="padding-left:20px;">
-								<form target="paypal" action="https://sandbox.paypal.com/cgi-bin/webscr" method="post" >
+								<form target="paypal" action="Transaction" method="post" >
 									<input type="hidden" name="cmd" value="_cart">
 									<input type="hidden" name="business" value="lokalista.ph-facilitator@gmail.com">
 									<input type="hidden" name="lc" value="GB">
@@ -131,7 +131,7 @@
 		%>
 					<div class="item">
 					<h2 class="item_name"><%= currItem.getName() %></h2>
-					<img class="item_img" src="/TestSecuProj/images2?id=<%= currItem.getId()%>">
+					<img class="item_img" src="https://securedev.mybluemix.net/images2?id=<%= currItem.getId()%>">
 					<p class="description"><%= currItem.getDescription() %></p>
 					<h2 class="item_price">$<%= currItem.getPrice() %></h2>
 							<div style="padding-left:20px;">

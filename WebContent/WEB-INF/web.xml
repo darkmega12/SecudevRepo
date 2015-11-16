@@ -101,7 +101,7 @@
   </servlet-mapping>
    <servlet-mapping>
   	<servlet-name>ItemStoreController</servlet-name>
-  	<url-pattern>/store/items</url-pattern>
+  	<url-pattern>/store/item</url-pattern>
   </servlet-mapping>
   
   <security-constraint>

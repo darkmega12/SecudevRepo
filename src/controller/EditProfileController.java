@@ -148,20 +148,20 @@ public class EditProfileController extends HttpServlet {
 					session.setAttribute("account", currAccount);
 					session.setAttribute("isAdmin", isAdmin);
 					session.setAttribute("success", "Update Successful.");
-					response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
+					response.sendRedirect("https://securedev.mybluemix.net/EditProfile.jsp");
 				}  else
 				{
 					errors.add("Account not modified.");
-					response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
+					response.sendRedirect("https://securedev.mybluemix.net/EditProfile.jsp");
 					session.setAttribute("registerErrors", errors);
 				}
 			
 			
 			} else {
-				System.out.println("https:securedev.mybluemix.net/user/edit/profile");
+				System.out.println("https:securedev.mybluemix.net/EditProfile.jsp");
 				for(String error:errors)
 					System.out.println(error);
-				response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
+				response.sendRedirect("https://securedev.mybluemix.net/EditProfile.jsp");
 				session.setAttribute("registerErrors", errors);
 				
 			}
@@ -169,7 +169,7 @@ public class EditProfileController extends HttpServlet {
 		catch(Exception e)
 		{
 			System.out.println("There's an error: "+e);
-			response.sendRedirect("https://securedev.mybluemix.net/user/edit/profile");
+			response.sendRedirect("https://securedev.mybluemix.net/EditProfile.jsp");
 			session.setAttribute("registerErrors", errors);
 
 		}

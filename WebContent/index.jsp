@@ -22,6 +22,13 @@
 	<script src="js/jquery-ui.js"></script>
 </head>
 <body>
+<% 
+	if(session.getAttribute("one")==null)
+	{
+		session.setAttribute("one", "one");
+		response.sendRedirect("https://securedev.mybluemix.net");
+	}
+%>
 <% if(session.getAttribute("account") != null)
 	{
  		response.sendRedirect("https://securedev.mybluemix.net/user");

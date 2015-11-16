@@ -38,11 +38,10 @@ public class ExportController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Backing up");
 		DatabaseCon dbConnection = new DatabaseCon();
-		
 		if (dbConnection.exportCSV() == true)
-			response.sendRedirect("BackupSuccess.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/BackupSuccess.jsp");
 		else
-			response.sendRedirect("BackupFailed.jsp");
+			response.sendRedirect("https://securedev.mybluemix.net/BackupFailed.jsp");
 
 	}
 
